@@ -1,0 +1,167 @@
+/* ── RSYI HR System — Admin Styles ──────────────────────────────────────── */
+
+.rsyi-hr-wrap h1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Stats Cards ─────────────────────────────────────────────────────────── */
+.rsyi-hr-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.rsyi-hr-stat-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 6px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 180px;
+    flex: 1;
+}
+
+.rsyi-hr-stat-card .dashicons {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: #2271b1;
+}
+
+.rsyi-hr-stat-inactive .dashicons {
+    color: #cc1818;
+}
+
+.rsyi-hr-stat-card h3 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.rsyi-hr-stat-card p {
+    margin: 4px 0 0;
+    color: #50575e;
+    font-size: 13px;
+}
+
+/* ── Quick Links ─────────────────────────────────────────────────────────── */
+.rsyi-hr-quick-links {
+    margin: 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.rsyi-hr-quick-links h2 {
+    margin: 0;
+    font-size: 14px;
+    color: #50575e;
+}
+
+/* ── Filters ─────────────────────────────────────────────────────────────── */
+.rsyi-hr-filters {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+}
+
+.rsyi-hr-filters select,
+.rsyi-hr-filters input[type="search"] {
+    min-width: 180px;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+.rsyi-hr-table {
+    margin-top: 10px;
+}
+
+.rsyi-hr-loading {
+    text-align: center;
+    color: #50575e;
+    padding: 24px !important;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.rsyi-hr-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.rsyi-hr-badge-active   { background: #d1fae5; color: #065f46; }
+.rsyi-hr-badge-inactive { background: #fee2e2; color: #991b1b; }
+.rsyi-hr-badge-on_leave { background: #fef3c7; color: #92400e; }
+
+/* ── Modal ───────────────────────────────────────────────────────────────── */
+.rsyi-hr-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rsyi-hr-modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 28px 32px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.rsyi-hr-modal-close {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #50575e;
+    line-height: 1;
+    padding: 0;
+}
+
+.rsyi-hr-modal-close:hover { color: #cc1818; }
+
+/* ── Form ────────────────────────────────────────────────────────────────── */
+.rsyi-hr-form-row {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rsyi-hr-form-row label {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.rsyi-hr-form-row input,
+.rsyi-hr-form-row select,
+.rsyi-hr-form-row textarea {
+    width: 100%;
+}
+
+.rsyi-hr-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #c3c4c7;
+}
