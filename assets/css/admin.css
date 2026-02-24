@@ -124,6 +124,11 @@
     position: relative;
 }
 
+/* Wide modal for employee form */
+.rsyi-hr-modal-wide {
+    max-width: 1060px;
+}
+
 .rsyi-hr-modal-close {
     position: absolute;
     top: 12px;
@@ -141,7 +146,7 @@
 
 /* ── Form ────────────────────────────────────────────────────────────────── */
 .rsyi-hr-form-row {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -149,13 +154,70 @@
 
 .rsyi-hr-form-row label {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 12px;
+    color: #1d2327;
 }
 
 .rsyi-hr-form-row input,
 .rsyi-hr-form-row select,
 .rsyi-hr-form-row textarea {
     width: 100%;
+    box-sizing: border-box;
+}
+
+/* Read-only calculated fields */
+.rsyi-hr-readonly {
+    background: #f0f0f1 !important;
+    color: #50575e !important;
+    cursor: default !important;
+    font-weight: 600;
+}
+
+/* ── Form column grids ──────────────────────────────────────────────────── */
+.rsyi-hr-form-cols-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 20px;
+}
+
+.rsyi-hr-form-cols-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 20px;
+}
+
+@media (max-width: 780px) {
+    .rsyi-hr-form-cols-2,
+    .rsyi-hr-form-cols-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Form Sections ──────────────────────────────────────────────────────── */
+.rsyi-hr-form-section {
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    background: #fafafa;
+}
+
+.rsyi-hr-section-title {
+    margin: 0 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2271b1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.rsyi-hr-section-title .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 .rsyi-hr-form-actions {

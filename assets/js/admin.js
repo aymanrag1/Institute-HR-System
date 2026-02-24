@@ -45,13 +45,57 @@
         if ($(e.target).hasClass('rsyi-hr-modal')) { $(this).fadeOut(150); }
     });
 
+    /* ══ EMPLOYEES — Helpers ════════════════════════════════════════════════ */
+
+    /** Calculate age in years from a date string (YYYY-MM-DD) */
+    function calcAge(dobStr) {
+        if (!dobStr) return '';
+        var dob   = new Date(dobStr);
+        var today = new Date();
+        var age   = today.getFullYear() - dob.getFullYear();
+        var m     = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
+        return age >= 0 ? age : '';
+    }
+
+    /** Calculate total years of service from hire_date */
+    function calcTotalYears(hireDateStr) {
+        if (!hireDateStr) return '';
+        var hire  = new Date(hireDateStr);
+        var today = new Date();
+        var yrs   = today.getFullYear() - hire.getFullYear();
+        var m     = today.getMonth() - hire.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < hire.getDate())) { yrs--; }
+        return yrs >= 0 ? yrs : 0;
+    }
+
+    /** Fill age + birth breakdown fields from DOB input */
+    function updateDobFields(dobStr) {
+        var age = calcAge(dobStr);
+        $('#emp-age-display').val(age !== '' ? age + ' ' + (i18n.years || 'yrs') : '');
+        if (dobStr) {
+            var parts = dobStr.split('-');
+            $('#emp-birth-year').val(parts[0] || '');
+            $('#emp-birth-month').val(parts[1] || '');
+            $('#emp-birth-day').val(parts[2] || '');
+        } else {
+            $('#emp-birth-year, #emp-birth-month, #emp-birth-day').val('');
+        }
+    }
+
+    /** Fill total years from hire date */
+    function updateHireFields(hireDateStr) {
+        var yrs = calcTotalYears(hireDateStr);
+        $('#emp-total-years').val(yrs !== '' ? yrs + ' ' + (i18n.years || 'yrs') : '');
+    }
+
     /* ══ EMPLOYEES ══════════════════════════════════════════════════════════ */
 
     function loadEmployees() {
         var $tbody = $('#rsyi-hr-employees-body');
         if (!$tbody.length) return;
 
-        $tbody.html('<tr><td colspan="7" class="rsyi-hr-loading">جارٍ التحميل…</td></tr>');
+        $tbody.html('<tr><td colspan="8" class="rsyi-hr-loading">' + (i18n.loading || 'Loading…') + '</td></tr>');
 
         ajax('rsyi_hr_get_employees', {
             status:        $('#rsyi-hr-filter-status').val() || 'all',
@@ -60,20 +104,23 @@
         }, function (err, rows) {
             if (err) { notice(err, 'error'); return; }
             if (!rows || !rows.length) {
-                $tbody.html('<tr><td colspan="7">لا توجد نتائج.</td></tr>');
+                $tbody.html('<tr><td colspan="8">' + (i18n.no_results || 'No results.') + '</td></tr>');
                 return;
             }
-            var html = rows.map(function (r) {
+            var html = rows.map(function (r, idx) {
+                var nameDisplay = r.full_name || '';
+                if (r.full_name_ar) { nameDisplay += '<br><small style="color:#666">' + r.full_name_ar + '</small>'; }
                 return '<tr>' +
+                    '<td>' + (idx + 1) + '</td>' +
                     '<td>' + (r.employee_number || '—') + '</td>' +
-                    '<td><strong>' + r.full_name + '</strong></td>' +
+                    '<td>' + nameDisplay + '</td>' +
                     '<td>' + (r.department_name || '—') + '</td>' +
                     '<td>' + (r.job_title_name  || '—') + '</td>' +
-                    '<td>' + (r.phone           || '—') + '</td>' +
                     '<td>' + statusBadge(r.status) + '</td>' +
+                    '<td>' + (r.phone || '—') + '</td>' +
                     '<td>' +
-                        '<button class="button button-small rsyi-hr-edit-emp" data-id="' + r.id + '">تعديل</button> ' +
-                        '<button class="button button-small rsyi-hr-delete-emp" data-id="' + r.id + '">حذف</button>' +
+                        '<button class="button button-small rsyi-hr-edit-emp" data-id="' + r.id + '">' + (i18n.edit || 'Edit') + '</button> ' +
+                        '<button class="button button-small rsyi-hr-delete-emp" data-id="' + r.id + '">' + (i18n.delete || 'Delete') + '</button>' +
                     '</td>' +
                 '</tr>';
             }).join('');
@@ -81,11 +128,22 @@
         });
     }
 
+    // Live DOB calculation
+    $(document).on('change', '#emp-dob', function () {
+        updateDobFields($(this).val());
+    });
+
+    // Live hire date total-years calculation
+    $(document).on('change', '#emp-hire-date', function () {
+        updateHireFields($(this).val());
+    });
+
     // فتح Modal إضافة موظف
     $(document).on('click', '.rsyi-hr-btn-add-employee', function () {
         $('#rsyi-hr-employee-form')[0].reset();
         $('#emp-id').val('');
-        $('#rsyi-hr-employee-modal-title').text('إضافة موظف');
+        $('#emp-age-display, #emp-birth-year, #emp-birth-month, #emp-birth-day, #emp-total-years').val('');
+        $('#rsyi-hr-employee-modal-title').text(i18n.add_employee || 'Add Employee');
         openModal('#rsyi-hr-employee-modal');
     });
 
@@ -94,18 +152,45 @@
         var id = $(this).data('id');
         ajax('rsyi_hr_get_employee', { id: id }, function (err, emp) {
             if (err) { notice(err, 'error'); return; }
+
+            // Identity
             $('#emp-id').val(emp.id);
-            $('#emp-full-name').val(emp.full_name);
             $('#emp-number').val(emp.employee_number);
+            $('#emp-full-name').val(emp.full_name);
+            $('#emp-full-name-ar').val(emp.full_name_ar);
             $('#emp-national-id').val(emp.national_id);
+            $('#emp-dob').val(emp.date_of_birth);
+            updateDobFields(emp.date_of_birth);
+
+            // Work
             $('#emp-department').val(emp.department_id);
             $('#emp-job-title').val(emp.job_title_id);
+            $('#emp-grade').val(emp.grade);
+            $('#emp-hire-date').val(emp.hire_date);
+            updateHireFields(emp.hire_date);
+            $('#emp-contract-start').val(emp.contract_start);
+            $('#emp-contract-end').val(emp.contract_end);
+            $('#emp-contract-type').val(emp.contract_type);
+            $('#emp-status').val(emp.status);
+
+            // Personal
+            $('#emp-marital').val(emp.marital_status);
+            $('#emp-religion').val(emp.religion);
+            $('#emp-military').val(emp.military_status);
+            $('#emp-education').val(emp.education);
             $('#emp-phone').val(emp.phone);
             $('#emp-email').val(emp.email);
-            $('#emp-hire-date').val(emp.hire_date);
-            $('#emp-status').val(emp.status);
+            $('#emp-housing').val(emp.housing);
+            $('#emp-insurance').val(emp.insurance_number);
+
+            // Banking
+            $('#emp-bank-name').val(emp.bank_name);
+            $('#emp-bank-account').val(emp.bank_account);
+
+            // Notes
             $('#emp-notes').val(emp.notes);
-            $('#rsyi-hr-employee-modal-title').text('تعديل موظف');
+
+            $('#rsyi-hr-employee-modal-title').text(i18n.edit_employee || 'Edit Employee');
             openModal('#rsyi-hr-employee-modal');
         });
     });

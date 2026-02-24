@@ -74,7 +74,9 @@ class Employees {
 
         if ( ! empty( $args['search'] ) ) {
             $like     = '%' . $wpdb->esc_like( sanitize_text_field( $args['search'] ) ) . '%';
-            $where   .= ' AND (e.full_name LIKE %s OR e.employee_number LIKE %s OR e.email LIKE %s)';
+            $where   .= ' AND (e.full_name LIKE %s OR e.full_name_ar LIKE %s OR e.employee_number LIKE %s OR e.national_id LIKE %s OR e.email LIKE %s)';
+            $params[] = $like;
+            $params[] = $like;
             $params[] = $like;
             $params[] = $like;
             $params[] = $like;
@@ -143,17 +145,44 @@ class Employees {
         global $wpdb;
         $table = $wpdb->prefix . 'rsyi_hr_employees';
 
+        $valid_marital   = [ 'single', 'married', 'divorced', 'widowed' ];
+        $valid_military  = [ 'completed', 'exempt', 'pending', 'not_applicable' ];
+        $valid_contracts = [ 'permanent', 'temporary', 'part_time', 'project' ];
+
         $fields = [
-            'full_name'       => sanitize_text_field( $data['full_name'] ?? '' ),
+            // ── هوية ──────────────────────────────────────────────────────
+            'full_name'       => sanitize_text_field( $data['full_name']    ?? '' ),
+            'full_name_ar'    => isset( $data['full_name_ar'] )    ? sanitize_text_field( $data['full_name_ar'] )    : null,
             'employee_number' => isset( $data['employee_number'] ) ? sanitize_text_field( $data['employee_number'] ) : null,
             'national_id'     => isset( $data['national_id'] )     ? sanitize_text_field( $data['national_id'] )     : null,
+            'date_of_birth'   => ! empty( $data['date_of_birth'] ) ? sanitize_text_field( $data['date_of_birth'] )   : null,
+            // ── عمل ───────────────────────────────────────────────────────
             'department_id'   => ! empty( $data['department_id'] ) ? absint( $data['department_id'] )                : null,
             'job_title_id'    => ! empty( $data['job_title_id'] )  ? absint( $data['job_title_id'] )                 : null,
-            'phone'           => isset( $data['phone'] )           ? sanitize_text_field( $data['phone'] )           : null,
-            'email'           => isset( $data['email'] )           ? sanitize_email( $data['email'] )                : null,
+            'grade'           => isset( $data['grade'] )           ? sanitize_text_field( $data['grade'] )           : null,
             'hire_date'       => ! empty( $data['hire_date'] )     ? sanitize_text_field( $data['hire_date'] )       : null,
+            'contract_start'  => ! empty( $data['contract_start'] )? sanitize_text_field( $data['contract_start'] )  : null,
+            'contract_end'    => ! empty( $data['contract_end'] )  ? sanitize_text_field( $data['contract_end'] )    : null,
+            'contract_type'   => isset( $data['contract_type'] ) && in_array( $data['contract_type'], $valid_contracts, true )
+                                 ? $data['contract_type'] : null,
             'status'          => in_array( $data['status'] ?? '', [ 'active', 'inactive', 'on_leave' ], true )
                                  ? $data['status'] : 'active',
+            // ── شخصية ─────────────────────────────────────────────────────
+            'marital_status'  => isset( $data['marital_status'] ) && in_array( $data['marital_status'], $valid_marital, true )
+                                 ? $data['marital_status'] : null,
+            'religion'        => isset( $data['religion'] )        ? sanitize_text_field( $data['religion'] )        : null,
+            'military_status' => isset( $data['military_status'] ) && in_array( $data['military_status'], $valid_military, true )
+                                 ? $data['military_status'] : null,
+            'education'       => isset( $data['education'] )       ? sanitize_text_field( $data['education'] )       : null,
+            // ── تواصل وسكن ────────────────────────────────────────────────
+            'phone'           => isset( $data['phone'] )           ? sanitize_text_field( $data['phone'] )           : null,
+            'email'           => isset( $data['email'] )           ? sanitize_email( $data['email'] )                : null,
+            'housing'         => isset( $data['housing'] )         ? sanitize_text_field( $data['housing'] )         : null,
+            // ── تأمين وبنك ────────────────────────────────────────────────
+            'insurance_number'=> isset( $data['insurance_number'] )? sanitize_text_field( $data['insurance_number'] ): null,
+            'bank_name'       => isset( $data['bank_name'] )       ? sanitize_text_field( $data['bank_name'] )       : null,
+            'bank_account'    => isset( $data['bank_account'] )    ? sanitize_text_field( $data['bank_account'] )    : null,
+            // ── ملاحظات ───────────────────────────────────────────────────
             'notes'           => isset( $data['notes'] ) ? sanitize_textarea_field( $data['notes'] ) : null,
             'user_id'         => ! empty( $data['user_id'] ) ? absint( $data['user_id'] ) : null,
         ];

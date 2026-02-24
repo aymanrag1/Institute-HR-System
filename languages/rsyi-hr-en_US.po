@@ -1,0 +1,382 @@
+# RSYI HR System — English (United States) Translation
+# Copyright (C) 2024 RSYI Dev Team
+# This file is distributed under the same license as the RSYI HR System plugin.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: RSYI HR System 2.0.0\n"
+"Report-Msgid-Bugs-To: https://redsea-yacht-institute.com\n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: RSYI Dev Team\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name
+msgid "RSYI HR System"
+msgstr "RSYI HR System"
+
+#. Plugin Description
+msgid "نظام الموارد البشرية المركزي للمعهد — يوفّر الأقسام والتقسيم الوظيفي وسجل الموظفين كمصدر موحّد لجميع plugins المعهد."
+msgstr "Central HR System for the Institute — provides departments, job titles, and employee records as a unified source for all Institute plugins."
+
+# ── Admin Menu ─────────────────────────────────────────────────────────────
+
+msgid "الموارد البشرية"
+msgstr "Human Resources"
+
+msgid "الموظفون"
+msgstr "Employees"
+
+msgid "الأقسام"
+msgstr "Departments"
+
+msgid "التقسيم الوظيفي"
+msgstr "Job Titles"
+
+# ── Employees Page ──────────────────────────────────────────────────────────
+
+msgid "Employees / الموظفون"
+msgstr "Employees"
+
+msgid "Add Employee / إضافة موظف"
+msgstr "+ Add Employee"
+
+msgid "All Departments / كل الأقسام"
+msgstr "All Departments"
+
+msgid "All Status / كل الحالات"
+msgstr "All Statuses"
+
+msgid "Active / نشط"
+msgstr "Active"
+
+msgid "Inactive / غير نشط"
+msgstr "Inactive"
+
+msgid "On Leave / في إجازة"
+msgstr "On Leave"
+
+msgid "Search name, ID, national ID... / بحث..."
+msgstr "Search name, Emp. ID, national ID..."
+
+msgid "Emp. ID"
+msgstr "Emp. ID"
+
+msgid "Name / الاسم"
+msgstr "Name"
+
+msgid "Department / القسم"
+msgstr "Department"
+
+msgid "Position / الوظيفة"
+msgstr "Position"
+
+msgid "Status / الحالة"
+msgstr "Status"
+
+msgid "Phone / الهاتف"
+msgstr "Phone"
+
+msgid "Actions / إجراءات"
+msgstr "Actions"
+
+msgid "Loading... / جارٍ التحميل..."
+msgstr "Loading..."
+
+# ── Employee Modal — Section 1: Identity ───────────────────────────────────
+
+msgid "Identity / بيانات الهوية"
+msgstr "Identity"
+
+msgid "Name (EN) *"
+msgstr "Name (EN) *"
+
+msgid "Full name in English"
+msgstr "Full name in English"
+
+msgid "الاسم (AR)"
+msgstr "Name (AR)"
+
+msgid "National ID / الرقم القومي"
+msgstr "National ID"
+
+msgid "Date of Birth / تاريخ الميلاد"
+msgstr "Date of Birth"
+
+msgid "Age / السن"
+msgstr "Age"
+
+msgid "Auto-calculated / تلقائي"
+msgstr "Auto-calculated"
+
+msgid "Year / سنة الميلاد"
+msgstr "Birth Year"
+
+msgid "Month / الشهر"
+msgstr "Birth Month"
+
+msgid "Day / اليوم"
+msgstr "Birth Day"
+
+# ── Employee Modal — Section 2: Work ───────────────────────────────────────
+
+msgid "Work Info / بيانات العمل"
+msgstr "Work Information"
+
+msgid "— Select / اختر —"
+msgstr "— Select —"
+
+msgid "Grade / الدرجة الوظيفية"
+msgstr "Grade"
+
+msgid "e.g. Grade 5"
+msgstr "e.g. Grade 5"
+
+msgid "Hire Date / تاريخ التعيين"
+msgstr "Hire Date"
+
+msgid "Contract Start / بداية العقد"
+msgstr "Contract Start"
+
+msgid "Contract End / نهاية العقد"
+msgstr "Contract End"
+
+msgid "Contract Type / نوع العقد"
+msgstr "Contract Type"
+
+msgid "Permanent / دائم"
+msgstr "Permanent"
+
+msgid "Temporary / مؤقت"
+msgstr "Temporary"
+
+msgid "Part-time / جزء وقت"
+msgstr "Part-time"
+
+msgid "Project / مشروع"
+msgstr "Project-based"
+
+msgid "Total Years / إجمالي السنوات"
+msgstr "Total Years"
+
+# ── Employee Modal — Section 3: Personal ───────────────────────────────────
+
+msgid "Personal Info / المعلومات الشخصية"
+msgstr "Personal Information"
+
+msgid "Marital Status / الحالة الاجتماعية"
+msgstr "Marital Status"
+
+msgid "Single / أعزب"
+msgstr "Single"
+
+msgid "Married / متزوج"
+msgstr "Married"
+
+msgid "Divorced / مطلق"
+msgstr "Divorced"
+
+msgid "Widowed / أرمل"
+msgstr "Widowed"
+
+msgid "Religion / الديانة"
+msgstr "Religion"
+
+msgid "Muslim / مسلم"
+msgstr "Muslim"
+
+msgid "Christian / مسيحي"
+msgstr "Christian"
+
+msgid "Other / أخرى"
+msgstr "Other"
+
+msgid "Military Status / موقف التجنيد"
+msgstr "Military Status"
+
+msgid "Completed / أتم الخدمة"
+msgstr "Completed"
+
+msgid "Exempt / معفى"
+msgstr "Exempt"
+
+msgid "Pending / لم يؤدِ"
+msgstr "Pending"
+
+msgid "N/A / لا ينطبق"
+msgstr "Not Applicable"
+
+msgid "Education / المؤهل الدراسي"
+msgstr "Education"
+
+msgid "Elementary / ابتدائي"
+msgstr "Elementary"
+
+msgid "Middle School / إعدادي"
+msgstr "Middle School"
+
+msgid "High School / ثانوي"
+msgstr "High School"
+
+msgid "Diploma / دبلوم"
+msgstr "Diploma"
+
+msgid "Bachelor / بكالوريوس"
+msgstr "Bachelor's Degree"
+
+msgid "Master / ماجستير"
+msgstr "Master's Degree"
+
+msgid "Doctorate / دكتوراه"
+msgstr "Doctorate"
+
+msgid "Telephone No. / الهاتف"
+msgstr "Telephone No."
+
+msgid "Email / البريد الإلكتروني"
+msgstr "Email"
+
+msgid "Housing / السكن"
+msgstr "Housing"
+
+msgid "Housing type or address"
+msgstr "Housing type or address"
+
+msgid "Insurance No. / الرقم التأميني"
+msgstr "Insurance No."
+
+# ── Employee Modal — Section 4: Banking ────────────────────────────────────
+
+msgid "Banking / البيانات البنكية"
+msgstr "Banking Details"
+
+msgid "Bank Name / اسم البنك"
+msgstr "Bank Name"
+
+msgid "Bank Account No. / رقم الحساب"
+msgstr "Bank Account No."
+
+# ── Employee Modal — Section 5: Notes ──────────────────────────────────────
+
+msgid "Notes / ملاحظات"
+msgstr "Notes"
+
+msgid "Save / حفظ"
+msgstr "Save"
+
+msgid "Cancel / إلغاء"
+msgstr "Cancel"
+
+msgid "Close"
+msgstr "Close"
+
+# ── Departments ─────────────────────────────────────────────────────────────
+
+msgid "إضافة قسم"
+msgstr "Add Department"
+
+msgid "رمز القسم"
+msgstr "Department Code"
+
+msgid "القسم الرئيسي"
+msgstr "Parent Department"
+
+msgid "مدير القسم"
+msgstr "Department Manager"
+
+msgid "الوصف"
+msgstr "Description"
+
+msgid "الحالة"
+msgstr "Status"
+
+msgid "نشط"
+msgstr "Active"
+
+msgid "غير نشط"
+msgstr "Inactive"
+
+msgid "حفظ"
+msgstr "Save"
+
+msgid "إلغاء"
+msgstr "Cancel"
+
+# ── Job Titles ──────────────────────────────────────────────────────────────
+
+msgid "إضافة وظيفة"
+msgstr "Add Job Title"
+
+msgid "رمز الوظيفة"
+msgstr "Job Code"
+
+msgid "القسم المرتبط"
+msgstr "Related Department"
+
+msgid "الدرجة الوظيفية"
+msgstr "Job Grade"
+
+# ── JS / AJAX ───────────────────────────────────────────────────────────────
+
+msgid "Are you sure you want to delete? / هل أنت متأكد من الحذف؟"
+msgstr "Are you sure you want to delete this record?"
+
+msgid "Saved successfully. / تم الحفظ بنجاح."
+msgstr "Saved successfully."
+
+msgid "An error occurred, please try again. / حدث خطأ، حاول مجدداً."
+msgstr "An error occurred. Please try again."
+
+msgid "This field is required. / هذا الحقل مطلوب."
+msgstr "This field is required."
+
+msgid "No results found. / لا توجد نتائج."
+msgstr "No results found."
+
+msgid "Edit Employee / تعديل موظف"
+msgstr "Edit Employee"
+
+msgid "Edit / تعديل"
+msgstr "Edit"
+
+msgid "Delete / حذف"
+msgstr "Delete"
+
+msgid "yrs / سنة"
+msgstr "yrs"
+
+# ── Employee class errors ───────────────────────────────────────────────────
+
+msgid "الموظف غير موجود."
+msgstr "Employee not found."
+
+msgid "اسم الموظف مطلوب."
+msgstr "Employee name is required."
+
+msgid "تعذّر الحذف."
+msgstr "Could not delete the record."
+
+# ── Dashboard ───────────────────────────────────────────────────────────────
+
+msgid "لوحة التحكم"
+msgstr "Dashboard"
+
+msgid "موظفون نشطون"
+msgstr "Active Employees"
+
+msgid "غير نشطين"
+msgstr "Inactive"
+
+msgid "في إجازة"
+msgstr "On Leave"
+
+msgid "الأقسام"
+msgstr "Departments"
+
+msgid "روابط سريعة"
+msgstr "Quick Links"

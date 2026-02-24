@@ -3,7 +3,7 @@
  * Plugin Name:       RSYI HR System
  * Plugin URI:        https://redsea-yacht-institute.com
  * Description:       نظام الموارد البشرية المركزي للمعهد — يوفّر الأقسام والتقسيم الوظيفي وسجل الموظفين كمصدر موحّد لجميع plugins المعهد.
- * Version:           1.0.0
+ * Version:           2.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            RSYI Dev Team
@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-define( 'RSYI_HR_VERSION',     '1.0.0' );
+define( 'RSYI_HR_VERSION',     '2.0.0' );
 define( 'RSYI_HR_PLUGIN_FILE', __FILE__ );
 define( 'RSYI_HR_DIR',         plugin_dir_path( __FILE__ ) );
 define( 'RSYI_HR_URL',         plugin_dir_url( __FILE__ ) );

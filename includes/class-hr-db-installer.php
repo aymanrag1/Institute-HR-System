@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 class DB_Installer {
 
-    const DB_VERSION        = '1.0.0';
+    const DB_VERSION        = '2.0.0';
     const DB_VERSION_OPTION = 'rsyi_hr_db_version';
 
     /**
@@ -67,26 +67,41 @@ class DB_Installer {
         // ── 3. الموظفون ────────────────────────────────────────────────────────
         $employees = $wpdb->prefix . 'rsyi_hr_employees';
         dbDelta( "CREATE TABLE {$employees} (
-            id              bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-            user_id         bigint(20) UNSIGNED DEFAULT NULL  COMMENT 'wp_users.ID إذا كان له حساب',
-            employee_number varchar(50)         DEFAULT NULL,
-            full_name       varchar(255)        NOT NULL,
-            national_id     varchar(50)         DEFAULT NULL,
-            department_id   bigint(20) UNSIGNED DEFAULT NULL,
-            job_title_id    bigint(20) UNSIGNED DEFAULT NULL,
-            phone           varchar(50)         DEFAULT NULL,
-            email           varchar(255)        DEFAULT NULL,
-            hire_date       date                DEFAULT NULL,
-            status          enum('active','inactive','on_leave') NOT NULL DEFAULT 'active',
-            notes           text,
-            created_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updated_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            id               bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id          bigint(20) UNSIGNED DEFAULT NULL  COMMENT 'wp_users.ID إذا كان له حساب',
+            employee_number  varchar(50)         DEFAULT NULL,
+            full_name        varchar(255)        NOT NULL      COMMENT 'الاسم بالإنجليزية',
+            full_name_ar     varchar(255)        DEFAULT NULL  COMMENT 'الاسم بالعربية',
+            national_id      varchar(50)         DEFAULT NULL  COMMENT 'الرقم القومي',
+            date_of_birth    date                DEFAULT NULL  COMMENT 'تاريخ الميلاد',
+            department_id    bigint(20) UNSIGNED DEFAULT NULL,
+            job_title_id     bigint(20) UNSIGNED DEFAULT NULL,
+            grade            varchar(50)         DEFAULT NULL  COMMENT 'الدرجة الوظيفية',
+            phone            varchar(50)         DEFAULT NULL  COMMENT 'رقم الهاتف',
+            email            varchar(255)        DEFAULT NULL,
+            hire_date        date                DEFAULT NULL  COMMENT 'تاريخ التعيين',
+            contract_start   date                DEFAULT NULL  COMMENT 'بداية العقد',
+            contract_end     date                DEFAULT NULL  COMMENT 'نهاية العقد',
+            contract_type    varchar(100)        DEFAULT NULL  COMMENT 'نوع العقد',
+            marital_status   varchar(50)         DEFAULT NULL  COMMENT 'الحالة الاجتماعية',
+            religion         varchar(100)        DEFAULT NULL  COMMENT 'الديانة',
+            housing          varchar(255)        DEFAULT NULL  COMMENT 'السكن',
+            insurance_number varchar(100)        DEFAULT NULL  COMMENT 'الرقم التأميني',
+            military_status  varchar(100)        DEFAULT NULL  COMMENT 'موقف التجنيد',
+            education        varchar(255)        DEFAULT NULL  COMMENT 'المؤهل الدراسي',
+            bank_name        varchar(255)        DEFAULT NULL  COMMENT 'اسم البنك',
+            bank_account     varchar(100)        DEFAULT NULL  COMMENT 'رقم الحساب البنكي',
+            status           enum('active','inactive','on_leave') NOT NULL DEFAULT 'active',
+            notes            text,
+            created_at       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY  (id),
             UNIQUE KEY   employee_number (employee_number),
             KEY user_id (user_id),
             KEY department_id (department_id),
             KEY job_title_id (job_title_id),
-            KEY status (status)
+            KEY status (status),
+            KEY date_of_birth (date_of_birth)
         ) {$collate};" );
 
         update_option( self::DB_VERSION_OPTION, self::DB_VERSION );
