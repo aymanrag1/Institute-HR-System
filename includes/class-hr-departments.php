@@ -232,7 +232,12 @@ class Departments {
 
     public static function ajax_get_departments(): void {
         check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
-        current_user_can( 'rsyi_hr_view_departments' ) || wp_die( -1 );
+
+        // الأقسام مطلوبة لملء نموذج الموظف، لذا يُسمح لمن يدير الموظفين أيضاً
+        $can = current_user_can( 'rsyi_hr_view_departments' )
+            || current_user_can( 'rsyi_hr_manage_employees' )
+            || current_user_can( 'rsyi_hr_manage_departments' );
+        $can || wp_die( -1 );
 
         $status = sanitize_text_field( $_POST['status'] ?? 'all' ); // phpcs:ignore
         wp_send_json_success( self::get_all( [ 'status' => $status ] ) );
@@ -269,7 +274,12 @@ class Departments {
 
     public static function ajax_get_job_titles(): void {
         check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
-        current_user_can( 'rsyi_hr_view_job_titles' ) || wp_die( -1 );
+
+        // الوظائف مطلوبة لملء نموذج الموظف، لذا يُسمح لمن يدير الموظفين أيضاً
+        $can = current_user_can( 'rsyi_hr_view_job_titles' )
+            || current_user_can( 'rsyi_hr_manage_employees' )
+            || current_user_can( 'rsyi_hr_manage_job_titles' );
+        $can || wp_die( -1 );
 
         $args = [ 'status' => sanitize_text_field( $_POST['status'] ?? 'all' ) ]; // phpcs:ignore
 
