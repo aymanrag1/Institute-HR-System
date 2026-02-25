@@ -53,6 +53,15 @@ class Admin_Menu {
             'rsyi-hr-job-titles',
             [ __CLASS__, 'page_job_titles' ]
         );
+
+        add_submenu_page(
+            'rsyi-hr',
+            __( 'الصلاحيات', 'rsyi-hr' ),
+            __( 'الصلاحيات', 'rsyi-hr' ),
+            'rsyi_hr_manage_settings',
+            'rsyi-hr-permissions',
+            [ __CLASS__, 'page_permissions' ]
+        );
     }
 
     public static function enqueue_assets( string $hook ): void {
@@ -123,5 +132,12 @@ class Admin_Menu {
         $job_titles  = Departments::get_all_job_titles( [ 'status' => 'all' ] );
         $departments = Departments::get_all();
         include RSYI_HR_DIR . 'admin/views/job-titles.php';
+    }
+
+    public static function page_permissions(): void {
+        $hr_caps       = Roles::get_hr_caps();
+        $definitions   = Roles::get_definitions();
+        $extension_caps = Roles::get_extension_caps();
+        include RSYI_HR_DIR . 'admin/views/permissions.php';
     }
 }

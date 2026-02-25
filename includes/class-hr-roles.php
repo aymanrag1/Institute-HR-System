@@ -8,6 +8,7 @@
  *   ١. HR Plugin تُعرِّف الأدوار المؤسسية الأساسية (Base Roles).
  *   ٢. كل plugin أخرى (Warehouse, Student Affairs…) تُضيف صلاحياتها
  *      على هذه الأدوار عبر hook: do_action('rsyi_hr_extend_roles').
+ *      أو عبر الـ API الرسمي: RSYI_HR\Roles::register_extension_caps(…)
  *   ٣. لا تنشئ أي plugin أخرى أدواراً جديدة مستقلة — توسِّع الموجودة فقط.
  *
  * التسلسل الهرمي للأدوار (من الأعلى):
@@ -16,6 +17,16 @@
  *   rsyi_dept_head         — رئيس قسم
  *   rsyi_staff             — موظف
  *   rsyi_readonly          — مشاهد (قراءة فقط)
+ *
+ * كيف تُسجِّل plugin خارجية صلاحياتها:
+ *
+ *   add_action( 'rsyi_hr_extend_roles', function() {
+ *       RSYI_HR\Roles::register_extension_caps( 'rsyi-warehouse', [
+ *           'rsyi_dean'      => [ 'iw_view_warehouse' => true, 'iw_approve_permits' => true ],
+ *           'rsyi_dept_head' => [ 'iw_view_warehouse' => true ],
+ *           'rsyi_staff'     => [ 'iw_view_warehouse' => true ],
+ *       ], 'نظام المستودعات' );
+ *   } );
  *
  * @package RSYI_HR
  */
@@ -28,6 +39,14 @@ class Roles {
 
     /** مفتاح حفظ إصدار الأدوار في wp_options */
     const ROLES_VERSION_OPTION = 'rsyi_hr_roles_version';
+
+    /**
+     * سجل صلاحيات الـ plugins الخارجية المسجَّلة في الجلسة الحالية.
+     * يُستخدم للعرض في صفحة الصلاحيات ولمزامنة الأدمن.
+     *
+     * @var array<string, array{label: string, caps_by_role: array<string, array<string, bool>>}>
+     */
+    private static array $extension_caps = [];
 
     // ─── تعريف الصلاحيات الخاصة بـ HR Plugin ──────────────────────────────
 
@@ -111,6 +130,54 @@ class Roles {
         ];
     }
 
+    // ─── Extension Caps API ────────────────────────────────────────────────
+
+    /**
+     * تسجيل صلاحيات plugin خارجية على أدوار HR.
+     *
+     * تُستدعى من داخل rsyi_hr_extend_roles hook:
+     *
+     *   add_action( 'rsyi_hr_extend_roles', function() {
+     *       RSYI_HR\Roles::register_extension_caps( 'rsyi-warehouse', [
+     *           'rsyi_dean'      => [ 'iw_view_warehouse' => true, 'iw_approve_permits' => true ],
+     *           'rsyi_dept_head' => [ 'iw_view_warehouse' => true ],
+     *       ], 'نظام المستودعات' );
+     *   } );
+     *
+     * @param string $plugin_id    مُعرِّف Plugin الخارجية (مثل: 'rsyi-warehouse')
+     * @param array  $caps_by_role ['role_slug' => ['cap_key' => true|false]]
+     * @param string $label        اسم Plugin للعرض في صفحة الصلاحيات
+     */
+    public static function register_extension_caps( string $plugin_id, array $caps_by_role, string $label = '' ): void {
+        self::$extension_caps[ $plugin_id ] = [
+            'label'        => $label ?: $plugin_id,
+            'caps_by_role' => $caps_by_role,
+        ];
+
+        foreach ( $caps_by_role as $role_slug => $caps ) {
+            $role = get_role( $role_slug );
+            if ( ! $role ) {
+                continue;
+            }
+
+            foreach ( $caps as $cap => $grant ) {
+                if ( ! isset( $role->capabilities[ $cap ] ) ) {
+                    $role->add_cap( $cap, (bool) $grant );
+                }
+            }
+        }
+    }
+
+    /**
+     * إرجاع صلاحيات الـ plugins الخارجية المسجَّلة في الجلسة الحالية.
+     * تُستخدم في صفحة الصلاحيات بلوحة التحكم.
+     *
+     * @return array<string, array{label: string, caps_by_role: array}>
+     */
+    public static function get_extension_caps(): array {
+        return self::$extension_caps;
+    }
+
     // ─── إنشاء / مزامنة الأدوار ────────────────────────────────────────────
 
     /**
@@ -124,10 +191,11 @@ class Roles {
             add_role( $slug, $def['label'], array_merge( [ 'read' => true ], $def['caps'] ) );
         }
 
-        self::sync_admin_caps( $definitions );
-
-        // أعطِ الـ plugins الأخرى فرصة لتوسيع الأدوار فوراً
+        // ① أولاً: الـ plugins الأخرى تُسجِّل صلاحياتها على الأدوار
         do_action( 'rsyi_hr_extend_roles' );
+
+        // ② ثانياً: مزامنة الأدمن بعد إضافة جميع الصلاحيات (بما فيها الخارجية)
+        self::sync_admin_caps_from_hr_roles();
 
         update_option( self::ROLES_VERSION_OPTION, RSYI_HR_VERSION );
     }
@@ -151,30 +219,39 @@ class Roles {
             }
         }
 
-        self::sync_admin_caps( $definitions );
-
+        // ① أولاً: الـ plugins الأخرى تُسجِّل صلاحياتها على الأدوار
         do_action( 'rsyi_hr_extend_roles' );
+
+        // ② ثانياً: مزامنة الأدمن بعد إضافة جميع الصلاحيات (بما فيها الخارجية)
+        self::sync_admin_caps_from_hr_roles();
 
         update_option( self::ROLES_VERSION_OPTION, RSYI_HR_VERSION );
     }
 
     /**
-     * منح جميع الصلاحيات لـ administrator تلقائياً.
+     * مزامنة الأدمن: يحصل على كل صلاحية موجودة في أي دور HR
+     * (تشمل صلاحيات الـ plugins الخارجية المُضافة على الأدوار).
+     *
+     * تُستدعى بعد do_action('rsyi_hr_extend_roles') مباشرة.
      */
-    private static function sync_admin_caps( array $definitions ): void {
+    private static function sync_admin_caps_from_hr_roles(): void {
         $admin = get_role( 'administrator' );
         if ( ! $admin ) {
             return;
         }
 
-        $all_caps = [];
-        foreach ( $definitions as $def ) {
-            $all_caps = array_merge( $all_caps, $def['caps'] );
-        }
+        $hr_slugs = array_keys( self::base_role_definitions() );
 
-        foreach ( array_keys( $all_caps ) as $cap ) {
-            if ( ! isset( $admin->capabilities[ $cap ] ) ) {
-                $admin->add_cap( $cap, true );
+        foreach ( $hr_slugs as $slug ) {
+            $role = get_role( $slug );
+            if ( ! $role ) {
+                continue;
+            }
+
+            foreach ( $role->capabilities as $cap => $grant ) {
+                if ( $grant && 'read' !== $cap && ! isset( $admin->capabilities[ $cap ] ) ) {
+                    $admin->add_cap( $cap, true );
+                }
             }
         }
     }
