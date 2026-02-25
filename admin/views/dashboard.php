@@ -56,4 +56,47 @@ defined( 'ABSPATH' ) || exit;
             <?php esc_html_e( '+ إضافة وظيفة', 'rsyi-hr' ); ?>
         </a>
     </div>
+
+    <!-- ── إعداد حماية البيانات ────────────────────────────────────────── -->
+    <?php if ( current_user_can( 'administrator' ) ) : ?>
+    <div style="margin-top:30px;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:16px 20px" dir="rtl">
+        <h3 style="margin:0 0 10px;color:#856404;display:flex;align-items:center;gap:8px">
+            <span class="dashicons dashicons-shield"></span>
+            <?php esc_html_e( 'حماية البيانات عند حذف البلجن', 'rsyi-hr' ); ?>
+        </h3>
+        <p style="color:#856404;margin:0 0 12px">
+            <?php esc_html_e( 'تحذير: إذا فعّلت هذا الخيار وقمت بحذف البلجن من WordPress — ستُحذف كل بيانات الموارد البشرية نهائياً. اتركه مُعطَّلاً للحفاظ على بياناتك.', 'rsyi-hr' ); ?>
+        </p>
+        <?php
+        $delete_data = get_option( 'rsyi_hr_delete_data_on_uninstall', '0' );
+
+        if ( isset( $_POST['rsyi_hr_save_uninstall_setting'] ) && check_admin_referer( 'rsyi_hr_dashboard' ) ) {
+            $new_val = isset( $_POST['rsyi_hr_delete_data'] ) ? '1' : '0';
+            update_option( 'rsyi_hr_delete_data_on_uninstall', $new_val );
+            $delete_data = $new_val;
+            echo '<div class="notice notice-success inline"><p>' . esc_html__( 'تم حفظ الإعداد.', 'rsyi-hr' ) . '</p></div>';
+        }
+        ?>
+        <form method="post" style="display:inline-flex;align-items:center;gap:12px">
+            <?php wp_nonce_field( 'rsyi_hr_dashboard' ); ?>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#856404;font-weight:600">
+                <input type="checkbox" name="rsyi_hr_delete_data" value="1"
+                       <?php checked( $delete_data, '1' ); ?>>
+                <?php esc_html_e( 'حذف كل البيانات عند إزالة البلجن', 'rsyi-hr' ); ?>
+            </label>
+            <button type="submit" name="rsyi_hr_save_uninstall_setting" class="button"
+                    style="<?php echo '1' === $delete_data ? 'border-color:#cc1818;color:#cc1818' : ''; ?>">
+                <?php esc_html_e( 'حفظ', 'rsyi-hr' ); ?>
+            </button>
+        </form>
+        <p style="margin:10px 0 0;font-size:12px;color:#856404">
+            <?php esc_html_e( 'الحالة الحالية:', 'rsyi-hr' ); ?>
+            <strong style="color:<?php echo '1' === $delete_data ? '#cc1818' : '#00a32a'; ?>">
+                <?php echo '1' === $delete_data
+                    ? esc_html__( '⚠ الحذف مفعَّل — بياناتك في خطر عند الإزالة', 'rsyi-hr' )
+                    : esc_html__( '✓ البيانات محمية — لن تُحذف عند إزالة البلجن', 'rsyi-hr' ); ?>
+            </strong>
+        </p>
+    </div>
+    <?php endif; ?>
 </div>
