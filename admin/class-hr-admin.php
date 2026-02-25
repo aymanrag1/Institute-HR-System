@@ -85,9 +85,10 @@ class Admin_Menu {
         );
 
         wp_localize_script( 'rsyi-hr-admin', 'rsyiHR', [
-            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'rsyi_hr_admin' ),
-            'i18n'    => [
+            'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+            'nonce'       => wp_create_nonce( 'rsyi_hr_admin' ),
+            'departments' => Departments::get_all( [ 'status' => 'active' ] ),
+            'i18n'        => [
                 'confirm_delete' => __( 'Are you sure you want to delete? / هل أنت متأكد من الحذف؟', 'rsyi-hr' ),
                 'saved'          => __( 'Saved successfully. / تم الحفظ بنجاح.', 'rsyi-hr' ),
                 'error'          => __( 'An error occurred, please try again. / حدث خطأ، حاول مجدداً.', 'rsyi-hr' ),

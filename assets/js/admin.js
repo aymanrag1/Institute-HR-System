@@ -106,9 +106,9 @@
     var PLACEHOLDER_OPTION = '<option value="">\u2014 Select / \u0627\u062e\u062a\u0631 \u2014</option>';
 
     /**
-     * تحميل الأقسام النشطة ديناميكياً من قاعدة البيانات.
-     * الحل الجذري: لا نعتمد على PHP المُعالَجة مسبقاً — نجلب الأقسام
-     * عبر AJAX في كل مرة يُفتح فيها الـ modal لضمان ظهور البيانات دائماً.
+     * تعبئة قائمة الأقسام من البيانات المحقونة في الصفحة (بدون AJAX).
+     * البيانات تُحمَّل مرة واحدة مع الصفحة عبر wp_localize_script
+     * فلا توجد أي صلاحيات أو طلبات شبكة قد تفشل.
      *
      * @param {Function} [callback] تُستدعى بعد تحديث القائمة
      */
@@ -116,16 +116,13 @@
         var $dept = $('#emp-department');
         if (!$dept.length) { if (callback) { callback(); } return; }
 
-        ajax('rsyi_hr_get_departments', { status: 'active' }, function (err, rows) {
-            if (err) { if (callback) { callback(); } return; }
+        var rows = HR.departments || [];
+        var opts = PLACEHOLDER_OPTION + rows.map(function (d) {
+            return '<option value="' + d.id + '">' + d.name + '</option>';
+        }).join('');
 
-            var opts = PLACEHOLDER_OPTION + (rows || []).map(function (d) {
-                return '<option value="' + d.id + '">' + d.name + '</option>';
-            }).join('');
-
-            $dept.html(opts);
-            if (callback) { callback(); }
-        });
+        $dept.html(opts);
+        if (callback) { callback(); }
     }
 
     /**
