@@ -131,7 +131,7 @@ class Admin_Menu {
 
     public static function page_job_titles(): void {
         $job_titles  = Departments::get_all_job_titles( [ 'status' => 'all' ] );
-        $departments = Departments::get_all();
+        $departments = Departments::get_all( [ 'status' => 'all' ] );
         include RSYI_HR_DIR . 'admin/views/job-titles.php';
     }
 
