@@ -109,8 +109,12 @@
     background: rgba(0,0,0,.5);
     z-index: 100000;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 12px;
+    box-sizing: border-box;
 }
 
 .rsyi-hr-modal-content {
@@ -119,9 +123,19 @@
     padding: 28px 32px;
     width: 100%;
     max-width: 560px;
-    max-height: 90vh;
-    overflow-y: auto;
     position: relative;
+    margin: auto;
+}
+
+@media (max-width: 600px) {
+    .rsyi-hr-modal {
+        padding: 10px 8px;
+    }
+
+    .rsyi-hr-modal-content {
+        padding: 20px 16px;
+        border-radius: 6px;
+    }
 }
 
 /* Wide modal for employee form */
@@ -163,6 +177,7 @@
 .rsyi-hr-form-row textarea {
     width: 100%;
     box-sizing: border-box;
+    touch-action: manipulation;
 }
 
 /* Read-only calculated fields */
