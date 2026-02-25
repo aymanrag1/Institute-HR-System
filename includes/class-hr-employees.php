@@ -14,11 +14,13 @@ defined( 'ABSPATH' ) || exit;
 class Employees {
 
     public static function init(): void {
-        add_action( 'wp_ajax_rsyi_hr_get_employees',    [ __CLASS__, 'ajax_get_employees' ] );
-        add_action( 'wp_ajax_rsyi_hr_get_employee',     [ __CLASS__, 'ajax_get_employee' ] );
-        add_action( 'wp_ajax_rsyi_hr_save_employee',    [ __CLASS__, 'ajax_save_employee' ] );
-        add_action( 'wp_ajax_rsyi_hr_delete_employee',  [ __CLASS__, 'ajax_delete_employee' ] );
-        add_action( 'wp_ajax_rsyi_hr_search_employees', [ __CLASS__, 'ajax_search_employees' ] );
+        add_action( 'wp_ajax_rsyi_hr_get_employees',         [ __CLASS__, 'ajax_get_employees' ] );
+        add_action( 'wp_ajax_rsyi_hr_get_employee',          [ __CLASS__, 'ajax_get_employee' ] );
+        add_action( 'wp_ajax_rsyi_hr_save_employee',         [ __CLASS__, 'ajax_save_employee' ] );
+        add_action( 'wp_ajax_rsyi_hr_delete_employee',       [ __CLASS__, 'ajax_delete_employee' ] );
+        add_action( 'wp_ajax_rsyi_hr_search_employees',      [ __CLASS__, 'ajax_search_employees' ] );
+        add_action( 'wp_ajax_rsyi_hr_import_employees',      [ __CLASS__, 'ajax_import_employees' ] );
+        add_action( 'wp_ajax_rsyi_hr_emp_template',          [ __CLASS__, 'ajax_download_emp_template' ] );
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -311,5 +313,255 @@ class Employees {
         ], $rows );
 
         wp_send_json_success( $results );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  CSV / Excel Import
+    // ═══════════════════════════════════════════════════════════════════════
+
+    /**
+     * Column header → field name map for the import template.
+     */
+    private static function csv_columns(): array {
+        return [
+            'employee_number' => 'Employee No. / رقم الموظف',
+            'full_name'       => 'Full Name (EN) * / الاسم (إنجليزي)*',
+            'full_name_ar'    => 'Full Name (AR) / الاسم (عربي)',
+            'national_id'     => 'National ID / الرقم القومي',
+            'date_of_birth'   => 'Date of Birth (YYYY-MM-DD) / تاريخ الميلاد',
+            'hire_date'       => 'Hire Date (YYYY-MM-DD) / تاريخ التعيين',
+            'contract_start'  => 'Contract Start (YYYY-MM-DD) / بداية العقد',
+            'contract_end'    => 'Contract End (YYYY-MM-DD) / نهاية العقد',
+            'contract_type'   => 'Contract Type (permanent|temporary|part_time|project) / نوع العقد',
+            'status'          => 'Status (active|inactive|on_leave) / الحالة',
+            'department_name' => 'Department Name / اسم القسم',
+            'job_title_name'  => 'Job Title / المسمى الوظيفي',
+            'grade'           => 'Grade / الدرجة الوظيفية',
+            'marital_status'  => 'Marital Status (single|married|divorced|widowed) / الحالة الاجتماعية',
+            'religion'        => 'Religion (muslim|christian|other) / الديانة',
+            'military_status' => 'Military Status (completed|exempt|pending|not_applicable) / التجنيد',
+            'education'       => 'Education (elementary|middle|high_school|diploma|bachelor|master|doctorate) / المؤهل',
+            'phone'           => 'Phone / الهاتف',
+            'email'           => 'Email / البريد الإلكتروني',
+            'housing'         => 'Housing / السكن',
+            'insurance_number'=> 'Insurance No. / الرقم التأميني',
+            'bank_name'       => 'Bank Name / اسم البنك',
+            'bank_account'    => 'Bank Account / رقم الحساب',
+            'notes'           => 'Notes / ملاحظات',
+        ];
+    }
+
+    /**
+     * Parse an uploaded CSV and insert/update employees.
+     * Returns [ 'inserted' => int, 'updated' => int, 'errors' => string[] ]
+     */
+    public static function import_csv( string $file_path ): array {
+        global $wpdb;
+
+        $dept_table = $wpdb->prefix . 'rsyi_hr_departments';
+        $jt_table   = $wpdb->prefix . 'rsyi_hr_job_titles';
+
+        // Cache department & job-title name→id maps (case-insensitive)
+        $dept_map = [];
+        foreach ( (array) $wpdb->get_results( "SELECT id, name FROM {$dept_table}", ARRAY_A ) as $row ) { // phpcs:ignore
+            $dept_map[ mb_strtolower( $row['name'] ) ] = (int) $row['id'];
+        }
+
+        $jt_map = [];
+        foreach ( (array) $wpdb->get_results( "SELECT id, title FROM {$jt_table}", ARRAY_A ) as $row ) { // phpcs:ignore
+            $jt_map[ mb_strtolower( $row['title'] ) ] = (int) $row['id'];
+        }
+
+        $columns  = array_keys( self::csv_columns() );
+        $inserted = 0;
+        $updated  = 0;
+        $errors   = [];
+
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
+        $handle = fopen( $file_path, 'r' );
+        if ( ! $handle ) {
+            return [ 'inserted' => 0, 'updated' => 0, 'errors' => [ __( 'تعذّر فتح الملف.', 'rsyi-hr' ) ] ];
+        }
+
+        // Strip UTF-8 BOM if present
+        $bom = fread( $handle, 3 );
+        if ( $bom !== "\xEF\xBB\xBF" ) {
+            rewind( $handle );
+        }
+
+        // Read header row
+        $header = fgetcsv( $handle );
+        if ( ! $header ) {
+            fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+            return [ 'inserted' => 0, 'updated' => 0, 'errors' => [ __( 'الملف فارغ أو تالف.', 'rsyi-hr' ) ] ];
+        }
+
+        // Map header positions → field names (match by the key part before ' / ')
+        $col_index = [];
+        foreach ( $header as $idx => $h ) {
+            $h = trim( $h );
+            // Match by exact column key or by the English portion before ' / '
+            foreach ( $columns as $field ) {
+                if ( mb_strtolower( $h ) === mb_strtolower( $field )
+                     || mb_strtolower( explode( ' / ', $h )[0] ) === mb_strtolower( explode( ' / ', self::csv_columns()[ $field ] )[0] )
+                     || mb_strtolower( $h ) === mb_strtolower( self::csv_columns()[ $field ] )
+                ) {
+                    $col_index[ $field ] = $idx;
+                    break;
+                }
+            }
+        }
+
+        $row_num = 1;
+        while ( ( $row = fgetcsv( $handle ) ) !== false ) {
+            $row_num++;
+
+            // Skip blank rows
+            if ( empty( array_filter( $row ) ) ) {
+                continue;
+            }
+
+            // Extract cell by field
+            $get = static function ( string $field ) use ( $row, $col_index ): string {
+                return isset( $col_index[ $field ], $row[ $col_index[ $field ] ] )
+                    ? trim( $row[ $col_index[ $field ] ] )
+                    : '';
+            };
+
+            $full_name = sanitize_text_field( $get( 'full_name' ) );
+            if ( '' === $full_name ) {
+                $errors[] = sprintf( __( 'صف %d: حقل الاسم (EN) مطلوب — تم تخطيه.', 'rsyi-hr' ), $row_num );
+                continue;
+            }
+
+            // Resolve department by name
+            $dept_name = mb_strtolower( $get( 'department_name' ) );
+            $dept_id   = $dept_map[ $dept_name ] ?? null;
+
+            // Resolve job title by name
+            $jt_name = mb_strtolower( $get( 'job_title_name' ) );
+            $jt_id   = $jt_map[ $jt_name ] ?? null;
+
+            $data = [
+                'employee_number' => $get( 'employee_number' ),
+                'full_name'       => $full_name,
+                'full_name_ar'    => sanitize_text_field( $get( 'full_name_ar' ) ),
+                'national_id'     => sanitize_text_field( $get( 'national_id' ) ),
+                'date_of_birth'   => $get( 'date_of_birth' ),
+                'hire_date'       => $get( 'hire_date' ),
+                'contract_start'  => $get( 'contract_start' ),
+                'contract_end'    => $get( 'contract_end' ),
+                'contract_type'   => $get( 'contract_type' ),
+                'status'          => $get( 'status' ) ?: 'active',
+                'department_id'   => $dept_id,
+                'job_title_id'    => $jt_id,
+                'grade'           => sanitize_text_field( $get( 'grade' ) ),
+                'marital_status'  => $get( 'marital_status' ),
+                'religion'        => $get( 'religion' ),
+                'military_status' => $get( 'military_status' ),
+                'education'       => $get( 'education' ),
+                'phone'           => sanitize_text_field( $get( 'phone' ) ),
+                'email'           => sanitize_email( $get( 'email' ) ),
+                'housing'         => sanitize_text_field( $get( 'housing' ) ),
+                'insurance_number'=> sanitize_text_field( $get( 'insurance_number' ) ),
+                'bank_name'       => sanitize_text_field( $get( 'bank_name' ) ),
+                'bank_account'    => sanitize_text_field( $get( 'bank_account' ) ),
+                'notes'           => sanitize_textarea_field( $get( 'notes' ) ),
+            ];
+
+            // Check if employee_number exists → update
+            $emp_number = $data['employee_number'];
+            if ( '' !== $emp_number ) {
+                $existing = self::get_by_employee_number( $emp_number );
+                if ( $existing ) {
+                    $data['id'] = $existing['id'];
+                    self::save( $data );
+                    $updated++;
+                    continue;
+                }
+            }
+
+            self::save( $data );
+            $inserted++;
+        }
+
+        fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+
+        return compact( 'inserted', 'updated', 'errors' );
+    }
+
+    /** AJAX: receive uploaded CSV, run import */
+    public static function ajax_import_employees(): void {
+        check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
+        current_user_can( 'rsyi_hr_manage_employees' ) || wp_die( -1 );
+
+        if ( empty( $_FILES['csv_file']['tmp_name'] ) ) {
+            wp_send_json_error( [ 'message' => __( 'لم يتم رفع أي ملف.', 'rsyi-hr' ) ] );
+        }
+
+        $file      = $_FILES['csv_file']; // phpcs:ignore
+        $mime_ok   = in_array( $file['type'], [ 'text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel' ], true );
+        $ext_ok    = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) ) === 'csv';
+
+        if ( ! $mime_ok && ! $ext_ok ) {
+            wp_send_json_error( [ 'message' => __( 'نوع الملف غير مدعوم. استخدم ملف CSV.', 'rsyi-hr' ) ] );
+        }
+
+        $result = self::import_csv( $file['tmp_name'] );
+
+        $msg = sprintf(
+            /* translators: 1: inserted, 2: updated */
+            __( 'تمت العملية: %1$d سجل جديد، %2$d سجل محدَّث.', 'rsyi-hr' ),
+            $result['inserted'],
+            $result['updated']
+        );
+
+        wp_send_json_success( [
+            'message' => $msg,
+            'errors'  => $result['errors'],
+        ] );
+    }
+
+    /** AJAX: stream downloadable CSV template */
+    public static function ajax_download_emp_template(): void {
+        check_ajax_referer( 'rsyi_hr_emp_template', 'nonce' );
+        current_user_can( 'rsyi_hr_manage_employees' ) || wp_die( -1 );
+
+        $columns = self::csv_columns();
+
+        // Headers must be sent before any output
+        header( 'Content-Type: text/csv; charset=UTF-8' );
+        header( 'Content-Disposition: attachment; filename="employees-template.csv"' );
+        header( 'Pragma: no-cache' );
+        header( 'Expires: 0' );
+
+        $out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+
+        // UTF-8 BOM so Excel opens Arabic correctly
+        fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+
+        // Header row: use the human-readable label
+        fputcsv( $out, array_values( $columns ) );
+
+        // Two example rows
+        fputcsv( $out, [
+            'EMP-001', 'Ahmed Mohamed', 'أحمد محمد', '12345678901234', '1990-05-15',
+            '2020-01-01', '2020-01-01', '2022-12-31', 'permanent', 'active',
+            'Training Department', 'Instructor', 'Grade 3',
+            'married', 'muslim', 'completed', 'bachelor',
+            '01000000000', 'ahmed@example.com', 'Company Housing',
+            '12345678', 'National Bank', '1234567890', '',
+        ] );
+        fputcsv( $out, [
+            'EMP-002', 'Sara Ali', 'سارة علي', '98765432101234', '1995-08-22',
+            '2022-03-15', '2022-03-15', '', 'temporary', 'active',
+            'Administration', 'Secretary', 'Grade 2',
+            'single', 'christian', 'not_applicable', 'master',
+            '01100000000', 'sara@example.com', 'Private',
+            '', 'Misr Bank', '9876543210', '',
+        ] );
+
+        fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        exit;
     }
 }
