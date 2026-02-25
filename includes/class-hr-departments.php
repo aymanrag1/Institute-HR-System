@@ -270,7 +270,13 @@ class Departments {
         check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
         current_user_can( 'rsyi_hr_view_job_titles' ) || wp_die( -1 );
 
-        wp_send_json_success( self::get_all_job_titles( [ 'status' => 'all' ] ) );
+        $args = [ 'status' => sanitize_text_field( $_POST['status'] ?? 'all' ) ]; // phpcs:ignore
+
+        if ( ! empty( $_POST['department_id'] ) ) { // phpcs:ignore
+            $args['department_id'] = absint( $_POST['department_id'] ); // phpcs:ignore
+        }
+
+        wp_send_json_success( self::get_all_job_titles( $args ) );
     }
 
     public static function ajax_save_job_title(): void {

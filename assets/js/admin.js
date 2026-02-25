@@ -35,14 +35,27 @@
 
     /* ══ MODAL HELPERS ══════════════════════════════════════════════════════ */
 
-    function openModal(id) { $(id).fadeIn(150); }
-    function closeModal(id) { $(id).fadeOut(150); }
+    /**
+     * فتح الـ modal مع الحفاظ على display: flex للتوسيط الصحيح.
+     * jQuery's fadeIn() يضع display: block افتراضياً مما يكسر التوسيط.
+     */
+    function openModal(id) {
+        $(id).css({ display: 'flex', opacity: 0 }).animate({ opacity: 1 }, 150);
+    }
+
+    function closeModal(id) {
+        $(id).animate({ opacity: 0 }, 150, function () {
+            $(this).css('display', 'none');
+        });
+    }
 
     $(document).on('click', '.rsyi-hr-modal-close', function () {
-        $(this).closest('.rsyi-hr-modal').fadeOut(150);
+        closeModal('#' + $(this).closest('.rsyi-hr-modal').attr('id'));
     });
     $(document).on('click', '.rsyi-hr-modal', function (e) {
-        if ($(e.target).hasClass('rsyi-hr-modal')) { $(this).fadeOut(150); }
+        if ($(e.target).hasClass('rsyi-hr-modal')) {
+            closeModal('#' + $(this).attr('id'));
+        }
     });
 
     /* ══ EMPLOYEES — Helpers ════════════════════════════════════════════════ */
@@ -87,6 +100,30 @@
     function updateHireFields(hireDateStr) {
         var yrs = calcTotalYears(hireDateStr);
         $('#emp-total-years').val(yrs !== '' ? yrs + ' ' + (i18n.years || 'yrs') : '');
+    }
+
+    /**
+     * تحميل الوظائف ديناميكياً حسب القسم المختار.
+     * - deptId = 0  → كل الوظائف النشطة
+     * - deptId > 0  → وظائف القسم + الوظائف غير المرتبطة بقسم
+     * @param {number}   deptId    معرِّف القسم (0 = كل الأقسام)
+     * @param {Function} [callback] تُستدعى بعد تحديث القائمة
+     */
+    function reloadJobTitles(deptId, callback) {
+        var $jt = $('#emp-job-title');
+        if (!$jt.length) { if (callback) { callback(); } return; }
+
+        ajax('rsyi_hr_get_job_titles', { department_id: deptId || 0, status: 'active' }, function (err, rows) {
+            if (err) { if (callback) { callback(); } return; }
+
+            var placeholder = '<option value="">\u2014 Select / \u0627\u062e\u062a\u0631 \u2014</option>';
+            var opts = placeholder + (rows || []).map(function (jt) {
+                return '<option value="' + jt.id + '">' + jt.title + '</option>';
+            }).join('');
+
+            $jt.html(opts);
+            if (callback) { callback(); }
+        });
     }
 
     /* ══ EMPLOYEES ══════════════════════════════════════════════════════════ */
@@ -138,11 +175,18 @@
         updateHireFields($(this).val());
     });
 
+    // عند تغيير القسم → أعد تحميل قائمة الوظائف المرتبطة به
+    $(document).on('change', '#emp-department', function () {
+        reloadJobTitles($(this).val());
+    });
+
     // فتح Modal إضافة موظف
     $(document).on('click', '.rsyi-hr-btn-add-employee', function () {
         $('#rsyi-hr-employee-form')[0].reset();
         $('#emp-id').val('');
         $('#emp-age-display, #emp-birth-year, #emp-birth-month, #emp-birth-day, #emp-total-years').val('');
+        // استعادة القائمة الكاملة للوظائف (قبل أي فلترة سابقة)
+        reloadJobTitles(0);
         $('#rsyi-hr-employee-modal-title').text(i18n.add_employee || 'Add Employee');
         openModal('#rsyi-hr-employee-modal');
     });
@@ -162,9 +206,12 @@
             $('#emp-dob').val(emp.date_of_birth);
             updateDobFields(emp.date_of_birth);
 
-            // Work
+            // Work — القسم أولاً، ثم تحميل الوظائف المرتبطة به وتحديد الوظيفة
             $('#emp-department').val(emp.department_id);
-            $('#emp-job-title').val(emp.job_title_id);
+            reloadJobTitles(emp.department_id, function () {
+                $('#emp-job-title').val(emp.job_title_id);
+            });
+
             $('#emp-grade').val(emp.grade);
             $('#emp-hire-date').val(emp.hire_date);
             updateHireFields(emp.hire_date);
@@ -237,7 +284,6 @@
 
     // تعديل قسم
     $(document).on('click', '.rsyi-hr-edit-dept', function () {
-        var $row = $(this).closest('tr');
         var id   = $(this).data('id');
         ajax('rsyi_hr_get_departments', {}, function (err, rows) {
             if (err) { notice(err, 'error'); return; }
