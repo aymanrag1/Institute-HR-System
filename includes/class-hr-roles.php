@@ -154,13 +154,29 @@ class Roles {
 
     /**
      * إنشاء الأدوار عند التفعيل الأول.
+     *
+     * ملاحظة: لا تستخدم remove_role() حتى لا تُحذف صلاحيات الإضافات الأخرى
+     * (المخازن، شؤون الطلاب، ...إلخ) التي تضيف صلاحياتها على هذه الأدوار.
      */
     public static function add_roles(): void {
         $definitions = self::base_role_definitions();
 
         foreach ( $definitions as $slug => $def ) {
-            remove_role( $slug );   // تحديث نظيف عند إعادة التفعيل
-            add_role( $slug, $def['label'], array_merge( [ 'read' => true ], $def['caps'] ) );
+            $existing = get_role( $slug );
+            if ( ! $existing ) {
+                // الدور غير موجود — أنشئه من الصفر
+                add_role(
+                    $slug,
+                    $def['label'],
+                    array_merge( [ 'read' => true ], $def['caps'] )
+                );
+            } else {
+                // الدور موجود — أضف/حدِّث صلاحيات HR فقط بدون المساس بصلاحيات
+                // الإضافات الأخرى (المخازن، شؤون الطلاب...إلخ)
+                foreach ( $def['caps'] as $cap => $grant ) {
+                    $existing->add_cap( $cap, $grant );
+                }
+            }
         }
 
         self::sync_admin_caps( $definitions );
@@ -173,6 +189,9 @@ class Roles {
 
     /**
      * مزامنة الأدوار بدون deactivate/activate (تُستدعى عند plugins_loaded).
+     *
+     * المبدأ: تُحدِّث صلاحيات HR على الأدوار الموجودة فقط، ولا تحذف
+     * أي صلاحيات أضافتها إضافات أخرى (المخازن، شؤون الطلاب...إلخ).
      */
     public static function sync_roles(): void {
         $definitions = self::base_role_definitions();
@@ -182,10 +201,9 @@ class Roles {
             if ( ! $role ) {
                 add_role( $slug, $def['label'], array_merge( [ 'read' => true ], $def['caps'] ) );
             } else {
+                // حدِّث صلاحيات HR فقط — الصلاحيات الأخرى تبقى كما هي
                 foreach ( $def['caps'] as $cap => $grant ) {
-                    if ( ! isset( $role->capabilities[ $cap ] ) ) {
-                        $role->add_cap( $cap, $grant );
-                    }
+                    $role->add_cap( $cap, $grant );
                 }
             }
         }
@@ -219,19 +237,29 @@ class Roles {
     }
 
     /**
-     * حذف الأدوار عند إلغاء التفعيل.
+     * إزالة صلاحيات HR فقط عند إلغاء تفعيل الإضافة.
+     *
+     * لا نحذف الأدوار نهائياً لأن إضافات أخرى (المخازن، شؤون الطلاب...)
+     * قد تعتمد على وجودها وتضيف إليها صلاحياتها الخاصة.
+     * نكتفي بحذف صلاحيات HR فقط من كل دور.
      */
     public static function remove_roles(): void {
-        $slugs = array_keys( self::base_role_definitions() );
-        foreach ( $slugs as $slug ) {
-            remove_role( $slug );
+        $hr_caps     = array_keys( self::get_hr_caps() );
+        $definitions = self::base_role_definitions();
+
+        foreach ( array_keys( $definitions ) as $slug ) {
+            $role = get_role( $slug );
+            if ( $role ) {
+                foreach ( $hr_caps as $cap ) {
+                    $role->remove_cap( $cap );
+                }
+            }
         }
 
         // إزالة صلاحيات HR من administrator
-        $admin    = get_role( 'administrator' );
-        $hr_caps  = self::get_hr_caps();
+        $admin = get_role( 'administrator' );
         if ( $admin ) {
-            foreach ( array_keys( $hr_caps ) as $cap ) {
+            foreach ( $hr_caps as $cap ) {
                 $admin->remove_cap( $cap );
             }
         }
