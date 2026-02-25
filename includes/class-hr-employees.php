@@ -127,6 +127,19 @@ class Employees {
         return $row ?: null;
     }
 
+    /** موظف برقم الموظف */
+    public static function get_by_employee_number( string $number ): ?array {
+        global $wpdb;
+        $table = $wpdb->prefix . 'rsyi_hr_employees';
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare( "SELECT * FROM {$table} WHERE employee_number = %s LIMIT 1", $number ), // phpcs:ignore
+            ARRAY_A
+        );
+
+        return $row ?: null;
+    }
+
     /** موظف بالـ WordPress user_id */
     public static function get_by_user_id( int $user_id ): ?array {
         global $wpdb;

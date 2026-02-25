@@ -173,6 +173,10 @@
     font-weight: 600;
 }
 
+/* ── Badge extras ────────────────────────────────────────────────────────── */
+.rsyi-hr-badge-draft    { background: #f0f0f1; color: #50575e; }
+.rsyi-hr-badge-pending  { background: #fef3c7; color: #92400e; }
+
 /* ── Form column grids ──────────────────────────────────────────────────── */
 .rsyi-hr-form-cols-2 {
     display: grid;

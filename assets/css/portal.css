@@ -1,0 +1,324 @@
+/* ── RSYI HR System — Employee Portal Styles ─────────────────────────── */
+
+.rsyi-portal {
+    direction: rtl;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 12px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.rsyi-portal-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: #2271b1;
+    color: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+
+.rsyi-portal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.rsyi-portal-header p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    opacity: .9;
+}
+
+.rsyi-portal-avatar img {
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,.6);
+    display: block;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────── */
+.rsyi-portal-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+
+.rsyi-portal-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.rsyi-portal-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1d2327;
+    margin: 0 0 16px;
+}
+
+.rsyi-portal-card-title .dashicons {
+    color: #2271b1;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+/* ── Signature area ──────────────────────────────────────────────────── */
+.rsyi-portal-signature-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.rsyi-portal-sig-img {
+    max-height: 80px;
+    border: 1px solid #ccc;
+    padding: 6px;
+    border-radius: 4px;
+    background: #fafafa;
+}
+
+.rsyi-portal-sig-note {
+    color: #50575e;
+    font-size: 13px;
+    margin: 0;
+}
+
+.rsyi-portal-upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f6fc;
+    border: 1px dashed #2271b1;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #2271b1;
+    font-size: 14px;
+    transition: background .2s;
+}
+
+.rsyi-portal-upload-label:hover {
+    background: #dce9f5;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.rsyi-portal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: opacity .15s;
+}
+
+.rsyi-portal-btn:hover { opacity: .85; }
+
+.rsyi-portal-btn-primary {
+    background: #2271b1;
+    color: #fff;
+    border-color: #2271b1;
+}
+
+.rsyi-portal-btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
+}
+
+/* ── Form styles ─────────────────────────────────────────────────────── */
+.rsyi-portal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.rsyi-portal-form-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1d2327;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #2271b1;
+}
+
+.rsyi-portal-form-section {
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    background: #fafafa;
+}
+
+.rsyi-portal-form-cols-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 20px;
+}
+
+.rsyi-portal-form-cols-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 20px;
+}
+
+@media (max-width: 640px) {
+    .rsyi-portal-form-cols-2,
+    .rsyi-portal-form-cols-3 { grid-template-columns: 1fr; }
+}
+
+.rsyi-portal-form-row {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rsyi-portal-form-row label,
+.rsyi-portal-label-block {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1d2327;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.rsyi-portal-form-row input[type="text"],
+.rsyi-portal-form-row input[type="date"],
+.rsyi-portal-form-row input[type="time"],
+.rsyi-portal-form-row select,
+.rsyi-portal-form-row textarea {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.rsyi-portal-readonly {
+    background: #f0f0f1 !important;
+    color: #50575e !important;
+    cursor: default !important;
+}
+
+.rsyi-portal-field-note {
+    color: #50575e;
+    font-size: 12px;
+}
+
+/* Radio group */
+.rsyi-portal-radio-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.rsyi-portal-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.rsyi-portal-sig-section {
+    background: #fafafa;
+}
+
+.rsyi-portal-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #c3c4c7;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────── */
+.rsyi-portal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.rsyi-portal-table th,
+.rsyi-portal-table td {
+    border: 1px solid #dcdcde;
+    padding: 8px 10px;
+    text-align: right;
+}
+
+.rsyi-portal-table th {
+    background: #f6f7f7;
+    font-weight: 600;
+}
+
+.rsyi-portal-table tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────── */
+.rsyi-portal-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.rsyi-portal-badge-green  { background: #d1fae5; color: #065f46; }
+.rsyi-portal-badge-red    { background: #fee2e2; color: #991b1b; }
+.rsyi-portal-badge-yellow { background: #fef3c7; color: #92400e; }
+.rsyi-portal-badge-gray   { background: #f0f0f1; color: #50575e; }
+
+/* ── Notices ─────────────────────────────────────────────────────────── */
+.rsyi-portal-notice {
+    background: #fff8c5;
+    border-right: 4px solid #f0c33c;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #713f12;
+    margin-bottom: 12px;
+}
+
+.rsyi-portal-notice-success {
+    background: #d1fae5;
+    border-right: 4px solid #00a32a;
+    border-radius: 4px;
+    padding: 10px 14px;
+    color: #065f46;
+    font-size: 14px;
+}
+
+.rsyi-portal-notice-error {
+    background: #fee2e2;
+    border-right: 4px solid #cc1818;
+    border-radius: 4px;
+    padding: 10px 14px;
+    color: #991b1b;
+    font-size: 14px;
+}
+
+.rsyi-portal-loading {
+    color: #50575e;
+    font-style: italic;
+    font-size: 14px;
+}

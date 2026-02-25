@@ -59,20 +59,36 @@ class Roles {
     public static function get_hr_caps(): array {
         return [
             // الموظفون
-            'rsyi_hr_view_employees'    => 'عرض قائمة الموظفين',
-            'rsyi_hr_manage_employees'  => 'إضافة / تعديل / حذف الموظفين',
+            'rsyi_hr_view_employees'         => 'عرض قائمة الموظفين',
+            'rsyi_hr_manage_employees'        => 'إضافة / تعديل / حذف الموظفين',
 
             // الأقسام
-            'rsyi_hr_view_departments'  => 'عرض الأقسام',
-            'rsyi_hr_manage_departments'=> 'إضافة / تعديل / حذف الأقسام',
+            'rsyi_hr_view_departments'        => 'عرض الأقسام',
+            'rsyi_hr_manage_departments'      => 'إضافة / تعديل / حذف الأقسام',
 
             // التقسيم الوظيفي
-            'rsyi_hr_view_job_titles'   => 'عرض التقسيم الوظيفي',
-            'rsyi_hr_manage_job_titles' => 'إضافة / تعديل / حذف الوظائف',
+            'rsyi_hr_view_job_titles'         => 'عرض التقسيم الوظيفي',
+            'rsyi_hr_manage_job_titles'       => 'إضافة / تعديل / حذف الوظائف',
+
+            // طلبات الإجازة
+            'rsyi_hr_manage_leaves'           => 'إدارة طلبات الإجازة',
+            'rsyi_hr_approve_leaves_manager'  => 'اعتماد الإجازات (مدير مباشر)',
+
+            // العمل الإضافي
+            'rsyi_hr_manage_overtime'         => 'إدارة طلبات العمل الإضافي',
+
+            // الحضور والانصراف
+            'rsyi_hr_manage_attendance'       => 'إدارة الحضور والانصراف',
+
+            // المخالفات والجزاءات
+            'rsyi_hr_manage_violations'       => 'إدارة المخالفات والجزاءات',
+
+            // اعتماد العميد
+            'rsyi_hr_dean_approve'            => 'تصديق واعتماد العميد',
 
             // الإعدادات والتقارير
-            'rsyi_hr_manage_settings'   => 'إعدادات نظام الموارد البشرية',
-            'rsyi_hr_view_reports'      => 'عرض تقارير الموارد البشرية',
+            'rsyi_hr_manage_settings'         => 'إعدادات نظام الموارد البشرية',
+            'rsyi_hr_view_reports'            => 'عرض تقارير الموارد البشرية',
         ];
     }
 
@@ -95,17 +111,20 @@ class Roles {
             // ── مدير الموارد البشرية ──────────────────────────────────────
             'rsyi_hr_manager' => [
                 'label' => 'مدير الموارد البشرية',
-                'caps'  => $all_hr,
+                'caps'  => array_merge( $all_hr, [
+                    'rsyi_hr_dean_approve' => false,   // العميد فقط
+                ] ),
             ],
 
             // ── رئيس قسم ─────────────────────────────────────────────────
             'rsyi_dept_head' => [
                 'label' => 'رئيس قسم',
                 'caps'  => [
-                    'rsyi_hr_view_employees'    => true,
-                    'rsyi_hr_view_departments'  => true,
-                    'rsyi_hr_view_job_titles'   => true,
-                    'rsyi_hr_view_reports'      => true,
+                    'rsyi_hr_view_employees'          => true,
+                    'rsyi_hr_view_departments'         => true,
+                    'rsyi_hr_view_job_titles'          => true,
+                    'rsyi_hr_view_reports'             => true,
+                    'rsyi_hr_approve_leaves_manager'   => true,
                 ],
             ],
 
