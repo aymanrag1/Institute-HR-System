@@ -227,12 +227,53 @@ class DB_Installer {
     }
 
     /**
+     * ينشئ صفحة WordPress لبوابة الموظف إذا لم تكن موجودة بعد.
+     */
+    public static function create_portal_page(): void {
+        $page_id = (int) get_option( 'rsyi_hr_portal_page_id', 0 );
+
+        if ( $page_id && 'publish' === get_post_status( $page_id ) ) {
+            return;
+        }
+
+        // البحث عن صفحة موجودة تحتوي على الـ shortcode
+        global $wpdb;
+        $existing = (int) $wpdb->get_var(
+            "SELECT ID FROM {$wpdb->posts}
+             WHERE post_status = 'publish'
+               AND post_type   = 'page'
+               AND post_content LIKE '%rsyi_hr_portal%'
+             LIMIT 1"
+        );
+
+        if ( $existing ) {
+            update_option( 'rsyi_hr_portal_page_id', $existing );
+            return;
+        }
+
+        // إنشاء صفحة جديدة
+        $new_id = wp_insert_post( [
+            'post_title'   => 'بوابة الموظف',
+            'post_name'    => 'hr-portal',
+            'post_content' => '[rsyi_hr_portal]',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_author'  => 1,
+        ] );
+
+        if ( $new_id && ! is_wp_error( $new_id ) ) {
+            update_option( 'rsyi_hr_portal_page_id', $new_id );
+        }
+    }
+
+    /**
      * يُستدعى عند تفعيل البلجن.
      */
     public static function activate(): void {
         self::create_tables();
         Roles::add_roles();
         flush_rewrite_rules();
+        self::create_portal_page();
     }
 
     /**

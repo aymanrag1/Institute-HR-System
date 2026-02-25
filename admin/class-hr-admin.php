@@ -14,6 +14,7 @@ class Admin_Menu {
     public static function init(): void {
         add_action( 'admin_menu',             [ __CLASS__, 'register_menus' ] );
         add_action( 'admin_enqueue_scripts',  [ __CLASS__, 'enqueue_assets' ] );
+        add_action( 'wp_ajax_rsyi_hr_create_portal_page', [ __CLASS__, 'ajax_create_portal_page' ] );
     }
 
     public static function register_menus(): void {
@@ -53,6 +54,9 @@ class Admin_Menu {
 
         add_submenu_page( 'rsyi-hr', __( 'الصلاحيات', 'rsyi-hr' ), __( 'الصلاحيات', 'rsyi-hr' ),
             'rsyi_hr_manage_permissions', 'rsyi-hr-permissions', [ __CLASS__, 'page_permissions' ] );
+
+        add_submenu_page( 'rsyi-hr', __( 'بوابة الموظف', 'rsyi-hr' ), __( 'بوابة الموظف', 'rsyi-hr' ),
+            'rsyi_hr_view_employees', 'rsyi-hr-portal', [ __CLASS__, 'page_portal' ] );
     }
 
     public static function enqueue_assets( string $hook ): void {
@@ -178,5 +182,29 @@ class Admin_Menu {
             'orderby'  => 'display_name',
         ] );
         include RSYI_HR_DIR . 'admin/views/permissions.php';
+    }
+
+    public static function page_portal(): void {
+        $page_id  = (int) get_option( 'rsyi_hr_portal_page_id', 0 );
+        $page_url = ( $page_id && 'publish' === get_post_status( $page_id ) )
+                    ? get_permalink( $page_id ) : '';
+        include RSYI_HR_DIR . 'admin/views/portal-page.php';
+    }
+
+    public static function ajax_create_portal_page(): void {
+        check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Forbidden' ] );
+        }
+        // Force-reset option so create_portal_page() will create a new page
+        delete_option( 'rsyi_hr_portal_page_id' );
+        DB_Installer::create_portal_page();
+        $page_id  = (int) get_option( 'rsyi_hr_portal_page_id', 0 );
+        $page_url = $page_id ? get_permalink( $page_id ) : '';
+        if ( $page_url ) {
+            wp_send_json_success( [ 'url' => $page_url ] );
+        } else {
+            wp_send_json_error( [ 'message' => __( 'فشل إنشاء الصفحة.', 'rsyi-hr' ) ] );
+        }
     }
 }

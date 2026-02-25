@@ -75,6 +75,7 @@ function rsyi_hr_init(): void {
     if ( version_compare( $stored_ver, RSYI_HR_VERSION, '<' ) ) {
         RSYI_HR\Roles::sync_roles();
         RSYI_HR\DB_Installer::create_tables();
+        RSYI_HR\DB_Installer::create_portal_page();
     }
 
     // ── تهيئة الوحدات ────────────────────────────────────────────────────
