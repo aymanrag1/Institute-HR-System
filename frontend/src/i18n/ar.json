@@ -1,0 +1,136 @@
+{
+  "app": {
+    "name": "نظام الموارد البشرية",
+    "institute": "معهد البحر الأحمر للقوارب",
+    "version": "v2.1.0"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "leaves": "طلبات الإجازة",
+    "overtime": "الأوفر تايم",
+    "attendance": "الحضور والانصراف",
+    "violations": "المخالفات",
+    "employees": "الموظفون",
+    "departments": "الأقسام",
+    "reports": "التقارير",
+    "audit": "سجل الأنشطة",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "login_btn": "دخول",
+    "logout": "تسجيل الخروج",
+    "change_password": "تغيير كلمة المرور",
+    "old_password": "كلمة المرور الحالية",
+    "new_password": "كلمة المرور الجديدة"
+  },
+  "leaves": {
+    "title": "طلبات الإجازة",
+    "new": "طلب إجازة جديد",
+    "type": "نوع الإجازة",
+    "start_date": "تاريخ البداية",
+    "end_date": "تاريخ النهاية",
+    "total_days": "عدد الأيام",
+    "reason": "السبب",
+    "status": "الحالة",
+    "submit": "تقديم الطلب",
+    "approve": "الموافقة",
+    "reject": "الرفض",
+    "return": "إرجاع للتعديل",
+    "download_pdf": "تحميل PDF",
+    "timeline": "سلسلة الموافقات",
+    "types": {
+      "annual": "إجازة سنوية",
+      "sick": "إجازة مرضية",
+      "emergency": "إجازة طارئة",
+      "unpaid": "إجازة بدون راتب",
+      "other": "أخرى"
+    },
+    "statuses": {
+      "draft": "مسودة",
+      "pending_manager": "في انتظار المدير",
+      "pending_hr": "في انتظار HR",
+      "pending_dean": "في انتظار العميد",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض",
+      "cancelled": "ملغي"
+    }
+  },
+  "overtime": {
+    "title": "طلبات الأوفر تايم",
+    "new": "طلب أوفر تايم جديد",
+    "date": "التاريخ",
+    "start_time": "وقت البداية",
+    "end_time": "وقت النهاية",
+    "total_hours": "إجمالي الساعات",
+    "reason": "السبب"
+  },
+  "attendance": {
+    "title": "الحضور والانصراف",
+    "import": "استيراد من Excel",
+    "download_template": "تحميل نموذج Excel",
+    "date": "التاريخ",
+    "check_in": "وقت الحضور",
+    "check_out": "وقت الانصراف",
+    "status": "الحالة",
+    "statuses": {
+      "present": "حاضر",
+      "absent": "غائب",
+      "late": "متأخر",
+      "half_day": "نصف يوم",
+      "on_leave": "في إجازة"
+    }
+  },
+  "violations": {
+    "title": "المخالفات",
+    "new": "إضافة مخالفة",
+    "type": "نوع المخالفة",
+    "severity": "الشدة",
+    "description": "الوصف",
+    "incident_date": "تاريخ الحادثة",
+    "penalty": "العقوبة",
+    "severities": {
+      "minor": "بسيط",
+      "moderate": "متوسط",
+      "major": "جسيم",
+      "critical": "بالغ"
+    }
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "view": "عرض",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "loading": "جاري التحميل...",
+    "no_data": "لا توجد بيانات",
+    "confirm_delete": "هل أنت متأكد من الحذف؟",
+    "yes": "نعم",
+    "no": "لا",
+    "notes": "ملاحظات",
+    "signature": "التوقيع",
+    "upload_signature": "رفع التوقيع",
+    "actions": "الإجراءات",
+    "total": "الإجمالي",
+    "page": "صفحة",
+    "of": "من"
+  },
+  "roles": {
+    "employee": "موظف",
+    "manager": "مدير مباشر",
+    "hr_manager": "مدير الموارد البشرية",
+    "dean": "العميد",
+    "admin": "مدير النظام"
+  },
+  "footer": {
+    "developed_by": "تطوير: أيمن رجب",
+    "phone": "+201159230034",
+    "version": "RSYI HR SYSTEM v2.1.0"
+  }
+}
