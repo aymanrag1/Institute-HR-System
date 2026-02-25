@@ -1,0 +1,441 @@
+/* ── RSYI HR Employee Portal Styles ─────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.rsyi-portal-wrap {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    direction: rtl;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+}
+
+/* ── Login / Error notices ────────────────────────────────────────────── */
+.rsyi-portal-login-notice,
+.rsyi-portal-error {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 15px;
+}
+.rsyi-portal-error { background: #fee2e2; border-color: #f87171; }
+
+/* ── Nav ─────────────────────────────────────────────────────────────── */
+.rsyi-portal-nav {
+    background: #1e3a5f;
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.rsyi-portal-nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 14px;
+    color: #cfe2ff;
+}
+
+.rsyi-portal-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #90b4e6;
+}
+
+.rsyi-portal-avatar-icon {
+    font-size: 28px;
+}
+
+.rsyi-portal-nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rsyi-portal-nav-links li a {
+    display: block;
+    padding: 14px 16px;
+    color: #cfe2ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .15s;
+    white-space: nowrap;
+}
+
+.rsyi-portal-nav-links li a:hover,
+.rsyi-portal-nav-links li.active a {
+    background: rgba(255,255,255,.12);
+    color: #fff;
+}
+
+.rsyi-portal-nav-links li.active a {
+    border-bottom: 3px solid #60a5fa;
+}
+
+/* ── Content area ────────────────────────────────────────────────────── */
+.rsyi-portal-content {
+    background: #f8fafc;
+    border: 1px solid #dde3ec;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    min-height: 400px;
+}
+
+.rsyi-portal-page {
+    padding: 24px 28px;
+}
+
+.rsyi-portal-page h2 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    color: #1e3a5f;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.rsyi-portal-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.rsyi-portal-page-header h2 { margin: 0; border: none; padding: 0; }
+
+/* ── Cards (dashboard) ───────────────────────────────────────────────── */
+.rsyi-portal-cards {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.rsyi-portal-card {
+    background: #fff;
+    border: 1px solid #d1d9e6;
+    border-radius: 8px;
+    padding: 20px 24px;
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+
+.rsyi-portal-card-num {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-bottom: 4px;
+}
+
+.rsyi-portal-card span:last-child { font-size: 13px; color: #64748b; }
+
+.rsyi-portal-card-green  { border-color: #6ee7b7; }
+.rsyi-portal-card-green  .rsyi-portal-card-num { color: #065f46; }
+.rsyi-portal-card-orange { border-color: #fed7aa; }
+.rsyi-portal-card-orange .rsyi-portal-card-num { color: #92400e; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.rsyi-portal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
+.rsyi-portal-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1e3a5f;
+    color: #fff !important;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s;
+    font-family: inherit;
+}
+.rsyi-portal-btn:hover { background: #2b527c; }
+
+.rsyi-portal-btn-secondary {
+    background: #e2e8f0;
+    color: #374151 !important;
+}
+.rsyi-portal-btn-secondary:hover { background: #cbd5e1; }
+
+.rsyi-portal-btn-sm { padding: 6px 14px; font-size: 12px; }
+
+/* ── Forms ───────────────────────────────────────────────────────────── */
+.rsyi-portal-form { max-width: 640px; }
+
+.rsyi-portal-form-row {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rsyi-portal-form-row label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #374151;
+}
+
+.rsyi-portal-form-row input,
+.rsyi-portal-form-row select,
+.rsyi-portal-form-row textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+    touch-action: manipulation;
+    box-sizing: border-box;
+}
+
+.rsyi-portal-form-row input:focus,
+.rsyi-portal-form-row select:focus,
+.rsyi-portal-form-row textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,.2);
+}
+
+.rsyi-portal-readonly {
+    background: #f3f4f6 !important;
+    color: #6b7280 !important;
+    cursor: default !important;
+}
+
+.rsyi-portal-form-cols-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 16px;
+}
+
+@media (max-width: 520px) {
+    .rsyi-portal-form-cols-2 { grid-template-columns: 1fr; }
+}
+
+.rsyi-portal-radio-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 8px 0;
+}
+.rsyi-portal-radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    cursor: pointer;
+}
+
+.rsyi-portal-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.rsyi-portal-notice {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-top: 12px;
+}
+.rsyi-portal-notice-success { background: #d1fae5; color: #065f46; }
+.rsyi-portal-notice-error   { background: #fee2e2; color: #991b1b; }
+
+/* ── Profile ──────────────────────────────────────────────────────────── */
+.rsyi-portal-profile-photo {
+    margin-bottom: 20px;
+}
+.rsyi-portal-photo-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #d1d9e6;
+    display: block;
+    margin-bottom: 8px;
+}
+.rsyi-portal-photo-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.rsyi-portal-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 24px;
+    margin-bottom: 24px;
+}
+@media (max-width: 520px) { .rsyi-portal-info-grid { grid-template-columns: 1fr; } }
+
+.rsyi-portal-info-item { display: flex; flex-direction: column; gap: 2px; }
+.rsyi-portal-info-item label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
+.rsyi-portal-info-item span  { font-size: 15px; color: #1e293b; }
+
+.rsyi-portal-signature-section { border-top: 1px solid #e2e8f0; padding-top: 20px; }
+.rsyi-portal-signature-section h3 { margin: 0 0 12px; font-size: 16px; color: #1e3a5f; }
+
+.rsyi-portal-sig-saved { margin-bottom: 14px; }
+.rsyi-portal-sig-choice { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.rsyi-portal-sig-choice label { display: flex; align-items: center; gap: 6px; font-weight: 400; cursor: pointer; }
+
+/* ── Table ────────────────────────────────────────────────────────────── */
+.rsyi-portal-table-wrap { overflow-x: auto; }
+
+.rsyi-portal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.rsyi-portal-table th {
+    background: #1e3a5f;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.rsyi-portal-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.rsyi-portal-table tr:last-child td { border-bottom: none; }
+.rsyi-portal-table tr:hover td { background: #f8fafc; }
+
+.rsyi-portal-empty {
+    text-align: center;
+    color: #64748b;
+    padding: 30px 0;
+    font-size: 15px;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────── */
+.rsyi-portal-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.rsyi-badge-pending  { background: #fef3c7; color: #92400e; }
+.rsyi-badge-info     { background: #dbeafe; color: #1e40af; }
+.rsyi-badge-approved { background: #d1fae5; color: #065f46; }
+.rsyi-badge-rejected { background: #fee2e2; color: #991b1b; }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .rsyi-portal-nav { border-radius: 6px 6px 0 0; }
+    .rsyi-portal-page { padding: 16px 14px; }
+    .rsyi-portal-nav-user { font-size: 12px; }
+    .rsyi-portal-nav-links li a { padding: 10px 10px; font-size: 12px; }
+    .rsyi-portal-btn { padding: 9px 14px; font-size: 13px; }
+}
+
+/* ── Print styles for leave form ─────────────────────────────────────── */
+@media print {
+    body > *:not(.rsyi-leave-print-wrapper) { display: none !important; }
+    .rsyi-leave-print-wrapper { display: block !important; }
+}
+
+.rsyi-leave-print-wrapper {
+    display: none;
+    direction: rtl;
+    font-family: Arial, sans-serif;
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.rsyi-leave-print-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+}
+
+.rsyi-leave-print-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.rsyi-leave-print-label {
+    font-weight: 700;
+    min-width: 160px;
+    flex-shrink: 0;
+}
+
+.rsyi-leave-print-dots {
+    flex: 1;
+    border-bottom: 1px dotted #555;
+}
+
+.rsyi-leave-print-sigs {
+    margin-top: 40px;
+    border-top: 1px solid #000;
+    padding-top: 20px;
+}
+
+.rsyi-leave-print-sig-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.rsyi-leave-print-sig-img {
+    max-width: 200px;
+    max-height: 60px;
+    border-bottom: 1px solid #555;
+}
+
+.rsyi-leave-print-dean {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    border-top: 1px solid #555;
+    padding-top: 16px;
+}

@@ -153,7 +153,7 @@ class Employees {
             // ── هوية ──────────────────────────────────────────────────────
             'full_name'       => sanitize_text_field( $data['full_name']    ?? '' ),
             'full_name_ar'    => isset( $data['full_name_ar'] )    ? sanitize_text_field( $data['full_name_ar'] )    : null,
-            'employee_number' => isset( $data['employee_number'] ) ? sanitize_text_field( $data['employee_number'] ) : null,
+            'employee_number' => ! empty( $data['employee_number'] ) ? sanitize_text_field( $data['employee_number'] ) : null,
             'national_id'     => isset( $data['national_id'] )     ? sanitize_text_field( $data['national_id'] )     : null,
             'date_of_birth'   => ! empty( $data['date_of_birth'] ) ? sanitize_text_field( $data['date_of_birth'] )   : null,
             // ── عمل ───────────────────────────────────────────────────────

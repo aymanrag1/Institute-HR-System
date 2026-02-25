@@ -101,6 +101,9 @@
 .rsyi-hr-badge-active   { background: #d1fae5; color: #065f46; }
 .rsyi-hr-badge-inactive { background: #fee2e2; color: #991b1b; }
 .rsyi-hr-badge-on_leave { background: #fef3c7; color: #92400e; }
+.rsyi-hr-badge-info     { background: #dbeafe; color: #1e40af; }
+.rsyi-hr-badge-info2    { background: #e0f2fe; color: #0369a1; }
+.rsyi-hr-badge-pending  { background: #fef3c7; color: #92400e; }
 
 /* ── Modal ───────────────────────────────────────────────────────────────── */
 .rsyi-hr-modal {

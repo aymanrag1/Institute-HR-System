@@ -40,20 +40,46 @@ class Roles {
     public static function get_hr_caps(): array {
         return [
             // الموظفون
-            'rsyi_hr_view_employees'    => 'عرض قائمة الموظفين',
-            'rsyi_hr_manage_employees'  => 'إضافة / تعديل / حذف الموظفين',
+            'rsyi_hr_view_employees'      => 'عرض قائمة الموظفين',
+            'rsyi_hr_manage_employees'    => 'إضافة / تعديل / حذف الموظفين',
 
             // الأقسام
-            'rsyi_hr_view_departments'  => 'عرض الأقسام',
-            'rsyi_hr_manage_departments'=> 'إضافة / تعديل / حذف الأقسام',
+            'rsyi_hr_view_departments'    => 'عرض الأقسام',
+            'rsyi_hr_manage_departments'  => 'إضافة / تعديل / حذف الأقسام',
 
             // التقسيم الوظيفي
-            'rsyi_hr_view_job_titles'   => 'عرض التقسيم الوظيفي',
-            'rsyi_hr_manage_job_titles' => 'إضافة / تعديل / حذف الوظائف',
+            'rsyi_hr_view_job_titles'     => 'عرض التقسيم الوظيفي',
+            'rsyi_hr_manage_job_titles'   => 'إضافة / تعديل / حذف الوظائف',
+
+            // طلبات الإجازة
+            'rsyi_hr_submit_leave'        => 'رفع طلب إجازة (الموظف)',
+            'rsyi_hr_view_leaves'         => 'عرض طلبات الإجازة',
+            'rsyi_hr_manage_leaves'       => 'اعتماد / رفض طلبات الإجازة',
+            'rsyi_hr_approve_leaves_dean' => 'تصديق الإجازة (العميد)',
+
+            // طلبات الوقت الإضافي
+            'rsyi_hr_submit_overtime'     => 'رفع طلب وقت إضافي (الموظف)',
+            'rsyi_hr_view_overtime'       => 'عرض طلبات الوقت الإضافي',
+            'rsyi_hr_manage_overtime'     => 'اعتماد / رفض الوقت الإضافي',
+
+            // الحضور والانصراف
+            'rsyi_hr_view_attendance'     => 'عرض الحضور والانصراف',
+            'rsyi_hr_manage_attendance'   => 'تسجيل / تعديل الحضور والانصراف',
+
+            // المخالفات والجزاءات
+            'rsyi_hr_view_violations'     => 'عرض المخالفات والجزاءات',
+            'rsyi_hr_manage_violations'   => 'إنشاء / تعديل المخالفات',
+            'rsyi_hr_approve_violations'  => 'اعتماد المخالفات (العميد)',
+
+            // الصلاحيات
+            'rsyi_hr_manage_permissions'  => 'إدارة صلاحيات المستخدمين',
+
+            // البوابة الإلكترونية
+            'rsyi_hr_portal_access'       => 'الوصول إلى بوابة الموظف',
 
             // الإعدادات والتقارير
-            'rsyi_hr_manage_settings'   => 'إعدادات نظام الموارد البشرية',
-            'rsyi_hr_view_reports'      => 'عرض تقارير الموارد البشرية',
+            'rsyi_hr_manage_settings'     => 'إعدادات نظام الموارد البشرية',
+            'rsyi_hr_view_reports'        => 'عرض تقارير الموارد البشرية',
         ];
     }
 
@@ -87,6 +113,14 @@ class Roles {
                     'rsyi_hr_view_departments'  => true,
                     'rsyi_hr_view_job_titles'   => true,
                     'rsyi_hr_view_reports'      => true,
+                    'rsyi_hr_view_leaves'       => true,
+                    'rsyi_hr_manage_leaves'     => true,
+                    'rsyi_hr_view_overtime'     => true,
+                    'rsyi_hr_manage_overtime'   => true,
+                    'rsyi_hr_view_attendance'   => true,
+                    'rsyi_hr_submit_leave'      => true,
+                    'rsyi_hr_submit_overtime'   => true,
+                    'rsyi_hr_portal_access'     => true,
                 ],
             ],
 
@@ -94,8 +128,12 @@ class Roles {
             'rsyi_staff' => [
                 'label' => 'موظف',
                 'caps'  => [
-                    'rsyi_hr_view_departments' => true,
-                    'rsyi_hr_view_job_titles'  => true,
+                    'rsyi_hr_view_departments'  => true,
+                    'rsyi_hr_view_job_titles'   => true,
+                    'rsyi_hr_submit_leave'      => true,
+                    'rsyi_hr_submit_overtime'   => true,
+                    'rsyi_hr_view_violations'   => true,
+                    'rsyi_hr_portal_access'     => true,
                 ],
             ],
 
@@ -103,9 +141,10 @@ class Roles {
             'rsyi_readonly' => [
                 'label' => 'مشاهد فقط',
                 'caps'  => [
-                    'rsyi_hr_view_employees'   => true,
-                    'rsyi_hr_view_departments' => true,
-                    'rsyi_hr_view_job_titles'  => true,
+                    'rsyi_hr_view_employees'    => true,
+                    'rsyi_hr_view_departments'  => true,
+                    'rsyi_hr_view_job_titles'   => true,
+                    'rsyi_hr_portal_access'     => true,
                 ],
             ],
         ];
