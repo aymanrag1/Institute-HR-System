@@ -102,6 +102,32 @@
         $('#emp-total-years').val(yrs !== '' ? yrs + ' ' + (i18n.years || 'yrs') : '');
     }
 
+    /** placeholder option مشترك */
+    var PLACEHOLDER_OPTION = '<option value="">\u2014 Select / \u0627\u062e\u062a\u0631 \u2014</option>';
+
+    /**
+     * تحميل الأقسام النشطة ديناميكياً من قاعدة البيانات.
+     * الحل الجذري: لا نعتمد على PHP المُعالَجة مسبقاً — نجلب الأقسام
+     * عبر AJAX في كل مرة يُفتح فيها الـ modal لضمان ظهور البيانات دائماً.
+     *
+     * @param {Function} [callback] تُستدعى بعد تحديث القائمة
+     */
+    function reloadDepartments(callback) {
+        var $dept = $('#emp-department');
+        if (!$dept.length) { if (callback) { callback(); } return; }
+
+        ajax('rsyi_hr_get_departments', { status: 'active' }, function (err, rows) {
+            if (err) { if (callback) { callback(); } return; }
+
+            var opts = PLACEHOLDER_OPTION + (rows || []).map(function (d) {
+                return '<option value="' + d.id + '">' + d.name + '</option>';
+            }).join('');
+
+            $dept.html(opts);
+            if (callback) { callback(); }
+        });
+    }
+
     /**
      * تحميل الوظائف ديناميكياً حسب القسم المختار.
      * - deptId = 0  → كل الوظائف النشطة
@@ -116,8 +142,7 @@
         ajax('rsyi_hr_get_job_titles', { department_id: deptId || 0, status: 'active' }, function (err, rows) {
             if (err) { if (callback) { callback(); } return; }
 
-            var placeholder = '<option value="">\u2014 Select / \u0627\u062e\u062a\u0631 \u2014</option>';
-            var opts = placeholder + (rows || []).map(function (jt) {
+            var opts = PLACEHOLDER_OPTION + (rows || []).map(function (jt) {
                 return '<option value="' + jt.id + '">' + jt.title + '</option>';
             }).join('');
 
@@ -185,10 +210,11 @@
         $('#rsyi-hr-employee-form')[0].reset();
         $('#emp-id').val('');
         $('#emp-age-display, #emp-birth-year, #emp-birth-month, #emp-birth-day, #emp-total-years').val('');
-        // استعادة القائمة الكاملة للوظائف (قبل أي فلترة سابقة)
-        reloadJobTitles(0);
         $('#rsyi-hr-employee-modal-title').text(i18n.add_employee || 'Add Employee');
         openModal('#rsyi-hr-employee-modal');
+        // تحميل الأقسام والوظائف من DB مباشرة عند فتح الـ modal
+        reloadDepartments();
+        reloadJobTitles(0);
     });
 
     // فتح Modal تعديل موظف
@@ -206,12 +232,7 @@
             $('#emp-dob').val(emp.date_of_birth);
             updateDobFields(emp.date_of_birth);
 
-            // Work — القسم أولاً، ثم تحميل الوظائف المرتبطة به وتحديد الوظيفة
-            $('#emp-department').val(emp.department_id);
-            reloadJobTitles(emp.department_id, function () {
-                $('#emp-job-title').val(emp.job_title_id);
-            });
-
+            // Work الأخرى (غير القسم والوظيفة)
             $('#emp-grade').val(emp.grade);
             $('#emp-hire-date').val(emp.hire_date);
             updateHireFields(emp.hire_date);
@@ -239,6 +260,14 @@
 
             $('#rsyi-hr-employee-modal-title').text(i18n.edit_employee || 'Edit Employee');
             openModal('#rsyi-hr-employee-modal');
+
+            // تحميل الأقسام من DB أولاً ثم تحديد القسم، ثم تحميل الوظائف وتحديدها
+            reloadDepartments(function () {
+                $('#emp-department').val(emp.department_id);
+                reloadJobTitles(emp.department_id, function () {
+                    $('#emp-job-title').val(emp.job_title_id);
+                });
+            });
         });
     });
 

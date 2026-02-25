@@ -234,7 +234,8 @@ class Departments {
         check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
         current_user_can( 'rsyi_hr_view_departments' ) || wp_die( -1 );
 
-        wp_send_json_success( self::get_all( [ 'status' => 'all' ] ) );
+        $status = sanitize_text_field( $_POST['status'] ?? 'all' ); // phpcs:ignore
+        wp_send_json_success( self::get_all( [ 'status' => $status ] ) );
     }
 
     public static function ajax_save_department(): void {
