@@ -87,7 +87,7 @@ class Admin_Menu {
         wp_localize_script( 'rsyi-hr-admin', 'rsyiHR', [
             'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
             'nonce'       => wp_create_nonce( 'rsyi_hr_admin' ),
-            'departments' => Departments::get_all( [ 'status' => 'active' ] ),
+            'departments' => Departments::get_all( [ 'status' => 'all' ] ),
             'i18n'        => [
                 'confirm_delete' => __( 'Are you sure you want to delete? / هل أنت متأكد من الحذف؟', 'rsyi-hr' ),
                 'saved'          => __( 'Saved successfully. / تم الحفظ بنجاح.', 'rsyi-hr' ),
@@ -118,8 +118,8 @@ class Admin_Menu {
     }
 
     public static function page_employees(): void {
-        $departments = Departments::get_all();
-        $job_titles  = Departments::get_all_job_titles();
+        $departments = Departments::get_all( [ 'status' => 'all' ] );
+        $job_titles  = Departments::get_all_job_titles( [ 'status' => 'all' ] );
         include RSYI_HR_DIR . 'admin/views/employees.php';
     }
 

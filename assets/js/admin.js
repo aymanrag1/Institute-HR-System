@@ -117,11 +117,16 @@
         if (!$dept.length) { if (callback) { callback(); } return; }
 
         var rows = HR.departments || [];
-        var opts = PLACEHOLDER_OPTION + rows.map(function (d) {
-            return '<option value="' + d.id + '">' + d.name + '</option>';
-        }).join('');
 
-        $dept.html(opts);
+        // فقط نكتب فوق الـ options لو عندنا بيانات فعلية
+        if (rows.length > 0) {
+            var opts = PLACEHOLDER_OPTION + rows.map(function (d) {
+                return '<option value="' + d.id + '">' + d.name + '</option>';
+            }).join('');
+            $dept.html(opts);
+        }
+        // لو HR.departments فارغة، نحتفظ بالـ options اللي رسمها PHP
+
         if (callback) { callback(); }
     }
 
