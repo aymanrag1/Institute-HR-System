@@ -15,8 +15,45 @@ defined( 'ABSPATH' ) || exit;
             <button class="page-title-action rsyi-hr-btn-add-dept">
                 <?php esc_html_e( 'إضافة قسم', 'rsyi-hr' ); ?>
             </button>
+            <button class="page-title-action" id="rsyi-hr-btn-import-dept" style="margin-right:6px">
+                <span class="dashicons dashicons-upload" style="vertical-align:middle;margin-top:-2px"></span>
+                <?php esc_html_e( 'استيراد CSV', 'rsyi-hr' ); ?>
+            </button>
+            <a class="page-title-action" style="margin-right:6px"
+               href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php?action=rsyi_hr_dept_template' ), 'rsyi_hr_dept_template' ) ); ?>">
+                <span class="dashicons dashicons-download" style="vertical-align:middle;margin-top:-2px"></span>
+                <?php esc_html_e( 'تحميل النموذج', 'rsyi-hr' ); ?>
+            </a>
         <?php endif; ?>
     </h1>
+
+    <!-- ── Import Notice ───────────────────────────────────────────────── -->
+    <div id="rsyi-hr-dept-import-notice" style="display:none;margin:10px 0"></div>
+
+    <!-- ── Import Panel ────────────────────────────────────────────────── -->
+    <?php if ( current_user_can( 'rsyi_hr_manage_departments' ) ) : ?>
+    <div id="rsyi-hr-dept-import-panel" style="display:none;background:#fff;border:1px solid #c3c4c7;border-radius:6px;padding:16px 20px;margin-bottom:18px">
+        <h3 style="margin:0 0 12px;display:flex;align-items:center;gap:8px">
+            <span class="dashicons dashicons-media-spreadsheet"></span>
+            <?php esc_html_e( 'استيراد الأقسام من ملف CSV', 'rsyi-hr' ); ?>
+        </h3>
+        <p style="margin:0 0 12px;color:#50575e;font-size:13px">
+            <?php esc_html_e( 'ارفع ملف CSV لإضافة أو تحديث الأقسام دفعةً واحدة. إذا كان اسم القسم موجوداً سيُحدَّث، وإلا سيُضاف جديداً.', 'rsyi-hr' ); ?><br>
+            <?php esc_html_e( 'استخدم زر "تحميل النموذج" للحصول على ملف CSV جاهز بالأعمدة الصحيحة.', 'rsyi-hr' ); ?>
+        </p>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <input type="file" id="rsyi-hr-dept-csv-file" accept=".csv,text/csv" style="border:1px solid #8c8f94;border-radius:4px;padding:5px 8px">
+            <button class="button button-primary" id="rsyi-hr-do-import-dept">
+                <span class="dashicons dashicons-upload" style="vertical-align:middle;margin-top:-2px"></span>
+                <?php esc_html_e( 'رفع واستيراد', 'rsyi-hr' ); ?>
+            </button>
+            <button class="button" id="rsyi-hr-cancel-import-dept">
+                <?php esc_html_e( 'إلغاء', 'rsyi-hr' ); ?>
+            </button>
+            <span id="rsyi-hr-dept-import-spinner" class="spinner" style="float:none;margin:0"></span>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <table class="wp-list-table widefat fixed striped rsyi-hr-table" id="rsyi-hr-departments-table">
         <thead>
@@ -70,6 +107,59 @@ defined( 'ABSPATH' ) || exit;
         </tbody>
     </table>
 </div>
+
+<script>
+(function($){
+    $('#rsyi-hr-btn-import-dept').on('click', function(){
+        $('#rsyi-hr-dept-import-panel').slideToggle(200);
+    });
+    $('#rsyi-hr-cancel-import-dept').on('click', function(){
+        $('#rsyi-hr-dept-import-panel').slideUp(200);
+        $('#rsyi-hr-dept-csv-file').val('');
+        $('#rsyi-hr-dept-import-notice').hide();
+    });
+    $('#rsyi-hr-do-import-dept').on('click', function(){
+        var fi = document.getElementById('rsyi-hr-dept-csv-file');
+        if ( ! fi || ! fi.files.length ) {
+            $('#rsyi-hr-dept-import-notice')
+                .html('<div class="notice notice-warning inline"><p><?php echo esc_js( __( 'الرجاء اختيار ملف CSV أولاً.', 'rsyi-hr' ) ); ?></p></div>').show();
+            return;
+        }
+        var fd = new FormData();
+        fd.append('action',   'rsyi_hr_import_departments');
+        fd.append('nonce',    rsyiHR.nonce);
+        fd.append('csv_file', fi.files[0]);
+
+        $('#rsyi-hr-dept-import-spinner').addClass('is-active');
+        $('#rsyi-hr-do-import-dept').prop('disabled', true);
+        $('#rsyi-hr-dept-import-notice').hide();
+
+        $.ajax({
+            url: ajaxurl, method: 'POST', data: fd, processData: false, contentType: false,
+            success: function(res){
+                var cls  = res.success ? 'notice-success' : 'notice-error';
+                var html = '<div class="notice ' + cls + ' inline"><p>' + (res.data.message || '') + '</p>';
+                if ( res.success && res.data.errors && res.data.errors.length ) {
+                    html += '<ul style="margin:6px 0 0 18px;list-style:disc">';
+                    $.each(res.data.errors, function(_,e){ html += '<li>'+e+'</li>'; });
+                    html += '</ul>';
+                }
+                html += '</div>';
+                $('#rsyi-hr-dept-import-notice').html(html).show();
+                if ( res.success ) { location.reload(); }
+            },
+            error: function(){
+                $('#rsyi-hr-dept-import-notice')
+                    .html('<div class="notice notice-error inline"><p><?php echo esc_js( __( 'حدث خطأ أثناء الرفع، حاول مجدداً.', 'rsyi-hr' ) ); ?></p></div>').show();
+            },
+            complete: function(){
+                $('#rsyi-hr-dept-import-spinner').removeClass('is-active');
+                $('#rsyi-hr-do-import-dept').prop('disabled', false);
+            }
+        });
+    });
+})(jQuery);
+</script>
 
 <!-- ── Modal ──────────────────────────────────────────────────────────────── -->
 <div id="rsyi-hr-dept-modal" class="rsyi-hr-modal" style="display:none;">

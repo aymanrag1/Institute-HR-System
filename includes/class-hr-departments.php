@@ -18,11 +18,15 @@ class Departments {
         add_action( 'wp_ajax_rsyi_hr_get_departments',    [ __CLASS__, 'ajax_get_departments' ] );
         add_action( 'wp_ajax_rsyi_hr_save_department',    [ __CLASS__, 'ajax_save_department' ] );
         add_action( 'wp_ajax_rsyi_hr_delete_department',  [ __CLASS__, 'ajax_delete_department' ] );
+        add_action( 'wp_ajax_rsyi_hr_import_departments', [ __CLASS__, 'ajax_import_departments' ] );
+        add_action( 'wp_ajax_rsyi_hr_dept_template',      [ __CLASS__, 'ajax_download_dept_template' ] );
 
         // ── التقسيم الوظيفي ────────────────────────────────────────────────
         add_action( 'wp_ajax_rsyi_hr_get_job_titles',     [ __CLASS__, 'ajax_get_job_titles' ] );
         add_action( 'wp_ajax_rsyi_hr_save_job_title',     [ __CLASS__, 'ajax_save_job_title' ] );
         add_action( 'wp_ajax_rsyi_hr_delete_job_title',   [ __CLASS__, 'ajax_delete_job_title' ] );
+        add_action( 'wp_ajax_rsyi_hr_import_job_titles',  [ __CLASS__, 'ajax_import_job_titles' ] );
+        add_action( 'wp_ajax_rsyi_hr_jt_template',        [ __CLASS__, 'ajax_download_jt_template' ] );
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -317,5 +321,314 @@ class Departments {
         }
 
         wp_send_json_success();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  DEPARTMENTS — CSV Import
+    // ═══════════════════════════════════════════════════════════════════════
+
+    private static function dept_csv_columns(): array {
+        return [
+            'name'        => 'Department Name * / اسم القسم*',
+            'code'        => 'Code / الكود',
+            'parent_name' => 'Parent Department / القسم الأعلى',
+            'description' => 'Description / الوصف',
+            'status'      => 'Status (active|inactive) / الحالة',
+        ];
+    }
+
+    public static function import_departments_csv( string $file_path ): array {
+        global $wpdb;
+        $table = $wpdb->prefix . 'rsyi_hr_departments';
+
+        // Build name→id map for parent resolution
+        $name_map = [];
+        foreach ( (array) $wpdb->get_results( "SELECT id, name FROM {$table}", ARRAY_A ) as $row ) { // phpcs:ignore
+            $name_map[ mb_strtolower( $row['name'] ) ] = (int) $row['id'];
+        }
+
+        $columns  = array_keys( self::dept_csv_columns() );
+        $inserted = 0;
+        $updated  = 0;
+        $errors   = [];
+
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
+        $handle = fopen( $file_path, 'r' );
+        if ( ! $handle ) {
+            return [ 'inserted' => 0, 'updated' => 0, 'errors' => [ __( 'تعذّر فتح الملف.', 'rsyi-hr' ) ] ];
+        }
+
+        // Strip BOM
+        $bom = fread( $handle, 3 );
+        if ( $bom !== "\xEF\xBB\xBF" ) { rewind( $handle ); }
+
+        $header = fgetcsv( $handle );
+        if ( ! $header ) {
+            fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+            return [ 'inserted' => 0, 'updated' => 0, 'errors' => [ __( 'الملف فارغ أو تالف.', 'rsyi-hr' ) ] ];
+        }
+
+        // Map columns
+        $col_index = [];
+        $labels    = self::dept_csv_columns();
+        foreach ( $header as $idx => $h ) {
+            $h = trim( $h );
+            foreach ( $columns as $field ) {
+                if ( mb_strtolower( $h ) === mb_strtolower( $field )
+                     || mb_strtolower( explode( ' / ', $h )[0] ) === mb_strtolower( explode( ' / ', $labels[ $field ] )[0] )
+                     || mb_strtolower( $h ) === mb_strtolower( $labels[ $field ] )
+                ) {
+                    $col_index[ $field ] = $idx;
+                    break;
+                }
+            }
+        }
+
+        $row_num = 1;
+        while ( ( $row = fgetcsv( $handle ) ) !== false ) {
+            $row_num++;
+            if ( empty( array_filter( $row ) ) ) { continue; }
+
+            $get = static fn( string $f ) => isset( $col_index[ $f ], $row[ $col_index[ $f ] ] )
+                ? trim( $row[ $col_index[ $f ] ] ) : '';
+
+            $name = sanitize_text_field( $get( 'name' ) );
+            if ( '' === $name ) {
+                $errors[] = sprintf( __( 'صف %d: اسم القسم مطلوب — تم تخطيه.', 'rsyi-hr' ), $row_num );
+                continue;
+            }
+
+            // Resolve parent by name
+            $parent_name = mb_strtolower( $get( 'parent_name' ) );
+            $parent_id   = '' !== $parent_name ? ( $name_map[ $parent_name ] ?? null ) : null;
+
+            $data = [
+                'name'        => $name,
+                'code'        => sanitize_text_field( $get( 'code' ) ),
+                'parent_id'   => $parent_id,
+                'description' => sanitize_textarea_field( $get( 'description' ) ),
+                'status'      => $get( 'status' ) ?: 'active',
+            ];
+
+            // Update if name already exists
+            $key = mb_strtolower( $name );
+            if ( isset( $name_map[ $key ] ) ) {
+                $data['id'] = $name_map[ $key ];
+                self::save( $data );
+                $updated++;
+            } else {
+                $new_id = self::save( $data );
+                if ( $new_id ) {
+                    $name_map[ $key ] = $new_id; // allow subsequent rows to use it as parent
+                }
+                $inserted++;
+            }
+        }
+
+        fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        return compact( 'inserted', 'updated', 'errors' );
+    }
+
+    public static function ajax_import_departments(): void {
+        check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
+        current_user_can( 'rsyi_hr_manage_departments' ) || wp_die( -1 );
+
+        if ( empty( $_FILES['csv_file']['tmp_name'] ) ) {
+            wp_send_json_error( [ 'message' => __( 'لم يتم رفع أي ملف.', 'rsyi-hr' ) ] );
+        }
+
+        $file    = $_FILES['csv_file']; // phpcs:ignore
+        $ext_ok  = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) ) === 'csv';
+        $mime_ok = in_array( $file['type'], [ 'text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel' ], true );
+
+        if ( ! $mime_ok && ! $ext_ok ) {
+            wp_send_json_error( [ 'message' => __( 'نوع الملف غير مدعوم. استخدم ملف CSV.', 'rsyi-hr' ) ] );
+        }
+
+        $result = self::import_departments_csv( $file['tmp_name'] );
+        $msg    = sprintf(
+            __( 'تمت العملية: %1$d سجل جديد، %2$d سجل محدَّث.', 'rsyi-hr' ),
+            $result['inserted'],
+            $result['updated']
+        );
+
+        wp_send_json_success( [ 'message' => $msg, 'errors' => $result['errors'] ] );
+    }
+
+    public static function ajax_download_dept_template(): void {
+        check_ajax_referer( 'rsyi_hr_dept_template', 'nonce' );
+        current_user_can( 'rsyi_hr_manage_departments' ) || wp_die( -1 );
+
+        header( 'Content-Type: text/csv; charset=UTF-8' );
+        header( 'Content-Disposition: attachment; filename="departments-template.csv"' );
+        header( 'Pragma: no-cache' );
+        header( 'Expires: 0' );
+
+        $out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        fputcsv( $out, array_values( self::dept_csv_columns() ) );
+        fputcsv( $out, [ 'Training Department', 'TRAIN', '', 'Training and development', 'active' ] );
+        fputcsv( $out, [ 'Maritime Training', 'MTRAIN', 'Training Department', 'Maritime courses', 'active' ] );
+        fputcsv( $out, [ 'Administration', 'ADMIN', '', 'Admin and finance', 'active' ] );
+        fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        exit;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  JOB TITLES — CSV Import
+    // ═══════════════════════════════════════════════════════════════════════
+
+    private static function jt_csv_columns(): array {
+        return [
+            'title'           => 'Job Title * / المسمى الوظيفي*',
+            'code'            => 'Code / الكود',
+            'department_name' => 'Department Name / اسم القسم',
+            'grade'           => 'Grade / الدرجة',
+            'description'     => 'Description / الوصف',
+            'status'          => 'Status (active|inactive) / الحالة',
+        ];
+    }
+
+    public static function import_job_titles_csv( string $file_path ): array {
+        global $wpdb;
+
+        $dept_table = $wpdb->prefix . 'rsyi_hr_departments';
+        $jt_table   = $wpdb->prefix . 'rsyi_hr_job_titles';
+
+        // Department name→id map
+        $dept_map = [];
+        foreach ( (array) $wpdb->get_results( "SELECT id, name FROM {$dept_table}", ARRAY_A ) as $row ) { // phpcs:ignore
+            $dept_map[ mb_strtolower( $row['name'] ) ] = (int) $row['id'];
+        }
+
+        // Job title name→id map (for update detection)
+        $jt_map = [];
+        foreach ( (array) $wpdb->get_results( "SELECT id, title FROM {$jt_table}", ARRAY_A ) as $row ) { // phpcs:ignore
+            $jt_map[ mb_strtolower( $row['title'] ) ] = (int) $row['id'];
+        }
+
+        $columns  = array_keys( self::jt_csv_columns() );
+        $inserted = 0;
+        $updated  = 0;
+        $errors   = [];
+
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
+        $handle = fopen( $file_path, 'r' );
+        if ( ! $handle ) {
+            return [ 'inserted' => 0, 'updated' => 0, 'errors' => [ __( 'تعذّر فتح الملف.', 'rsyi-hr' ) ] ];
+        }
+
+        // Strip BOM
+        $bom = fread( $handle, 3 );
+        if ( $bom !== "\xEF\xBB\xBF" ) { rewind( $handle ); }
+
+        $header = fgetcsv( $handle );
+        if ( ! $header ) {
+            fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+            return [ 'inserted' => 0, 'updated' => 0, 'errors' => [ __( 'الملف فارغ أو تالف.', 'rsyi-hr' ) ] ];
+        }
+
+        $col_index = [];
+        $labels    = self::jt_csv_columns();
+        foreach ( $header as $idx => $h ) {
+            $h = trim( $h );
+            foreach ( $columns as $field ) {
+                if ( mb_strtolower( $h ) === mb_strtolower( $field )
+                     || mb_strtolower( explode( ' / ', $h )[0] ) === mb_strtolower( explode( ' / ', $labels[ $field ] )[0] )
+                     || mb_strtolower( $h ) === mb_strtolower( $labels[ $field ] )
+                ) {
+                    $col_index[ $field ] = $idx;
+                    break;
+                }
+            }
+        }
+
+        $row_num = 1;
+        while ( ( $row = fgetcsv( $handle ) ) !== false ) {
+            $row_num++;
+            if ( empty( array_filter( $row ) ) ) { continue; }
+
+            $get = static fn( string $f ) => isset( $col_index[ $f ], $row[ $col_index[ $f ] ] )
+                ? trim( $row[ $col_index[ $f ] ] ) : '';
+
+            $title = sanitize_text_field( $get( 'title' ) );
+            if ( '' === $title ) {
+                $errors[] = sprintf( __( 'صف %d: المسمى الوظيفي مطلوب — تم تخطيه.', 'rsyi-hr' ), $row_num );
+                continue;
+            }
+
+            $dept_key = mb_strtolower( $get( 'department_name' ) );
+            $dept_id  = '' !== $dept_key ? ( $dept_map[ $dept_key ] ?? null ) : null;
+
+            $data = [
+                'title'         => $title,
+                'code'          => sanitize_text_field( $get( 'code' ) ),
+                'department_id' => $dept_id,
+                'grade'         => sanitize_text_field( $get( 'grade' ) ),
+                'description'   => sanitize_textarea_field( $get( 'description' ) ),
+                'status'        => $get( 'status' ) ?: 'active',
+            ];
+
+            $key = mb_strtolower( $title );
+            if ( isset( $jt_map[ $key ] ) ) {
+                $data['id'] = $jt_map[ $key ];
+                self::save_job_title( $data );
+                $updated++;
+            } else {
+                $new_id = self::save_job_title( $data );
+                if ( $new_id ) {
+                    $jt_map[ $key ] = $new_id;
+                }
+                $inserted++;
+            }
+        }
+
+        fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        return compact( 'inserted', 'updated', 'errors' );
+    }
+
+    public static function ajax_import_job_titles(): void {
+        check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
+        current_user_can( 'rsyi_hr_manage_job_titles' ) || wp_die( -1 );
+
+        if ( empty( $_FILES['csv_file']['tmp_name'] ) ) {
+            wp_send_json_error( [ 'message' => __( 'لم يتم رفع أي ملف.', 'rsyi-hr' ) ] );
+        }
+
+        $file    = $_FILES['csv_file']; // phpcs:ignore
+        $ext_ok  = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) ) === 'csv';
+        $mime_ok = in_array( $file['type'], [ 'text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel' ], true );
+
+        if ( ! $mime_ok && ! $ext_ok ) {
+            wp_send_json_error( [ 'message' => __( 'نوع الملف غير مدعوم. استخدم ملف CSV.', 'rsyi-hr' ) ] );
+        }
+
+        $result = self::import_job_titles_csv( $file['tmp_name'] );
+        $msg    = sprintf(
+            __( 'تمت العملية: %1$d سجل جديد، %2$d سجل محدَّث.', 'rsyi-hr' ),
+            $result['inserted'],
+            $result['updated']
+        );
+
+        wp_send_json_success( [ 'message' => $msg, 'errors' => $result['errors'] ] );
+    }
+
+    public static function ajax_download_jt_template(): void {
+        check_ajax_referer( 'rsyi_hr_jt_template', 'nonce' );
+        current_user_can( 'rsyi_hr_manage_job_titles' ) || wp_die( -1 );
+
+        header( 'Content-Type: text/csv; charset=UTF-8' );
+        header( 'Content-Disposition: attachment; filename="job-titles-template.csv"' );
+        header( 'Pragma: no-cache' );
+        header( 'Expires: 0' );
+
+        $out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        fputcsv( $out, array_values( self::jt_csv_columns() ) );
+        fputcsv( $out, [ 'Instructor', 'INST', 'Training Department', 'Grade 3', 'Maritime instructor', 'active' ] );
+        fputcsv( $out, [ 'Secretary', 'SEC', 'Administration', 'Grade 2', 'Administrative secretary', 'active' ] );
+        fputcsv( $out, [ 'Senior Instructor', 'SINST', 'Training Department', 'Grade 4', '', 'active' ] );
+        fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        exit;
     }
 }
