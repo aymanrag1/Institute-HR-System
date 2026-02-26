@@ -85,8 +85,8 @@ class Departments {
 
         $fields = [
             'name'        => sanitize_text_field( $data['name'] ?? '' ),
-            'code'        => isset( $data['code'] ) ? sanitize_text_field( $data['code'] ) : null,
-            'description' => isset( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : null,
+            'code'        => ! empty( $data['code'] ) ? sanitize_text_field( $data['code'] ) : null,
+            'description' => ! empty( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : null,
             'parent_id'   => ! empty( $data['parent_id'] ) ? absint( $data['parent_id'] ) : null,
             'manager_id'  => ! empty( $data['manager_id'] ) ? absint( $data['manager_id'] ) : null,
             'status'      => in_array( $data['status'] ?? '', [ 'active', 'inactive' ], true )
@@ -187,10 +187,10 @@ class Departments {
 
         $fields = [
             'title'         => sanitize_text_field( $data['title'] ?? '' ),
-            'code'          => isset( $data['code'] ) ? sanitize_text_field( $data['code'] ) : null,
+            'code'          => ! empty( $data['code'] ) ? sanitize_text_field( $data['code'] ) : null,
             'department_id' => ! empty( $data['department_id'] ) ? absint( $data['department_id'] ) : null,
-            'grade'         => isset( $data['grade'] ) ? sanitize_text_field( $data['grade'] ) : null,
-            'description'   => isset( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : null,
+            'grade'         => ! empty( $data['grade'] ) ? sanitize_text_field( $data['grade'] ) : null,
+            'description'   => ! empty( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : null,
             'status'        => in_array( $data['status'] ?? '', [ 'active', 'inactive' ], true )
                                ? $data['status'] : 'active',
         ];
