@@ -211,6 +211,53 @@ $leave_type_labels = [
         });
     }
 
+    // Auto-fill last leave date when employee is selected
+    $(document).on('change', '#leave-employee', function () {
+        var empId = $(this).val();
+        if (!empId) {
+            $('#leave-last').val('');
+            $('#rsyi-hr-leave-balance-info').remove();
+            return;
+        }
+        // Fetch last approved leave date
+        $.post(rsyiHR.ajaxUrl, {
+            action: 'rsyi_hr_get_last_leave_date',
+            nonce: rsyiHR.nonce,
+            employee_id: empId
+        }, function (res) {
+            if (res.success && res.data.last_leave_date) {
+                $('#leave-last').val(res.data.last_leave_date);
+            }
+        });
+        // Fetch leave balance for current year
+        $.post(rsyiHR.ajaxUrl, {
+            action: 'rsyi_hr_get_employee_balances',
+            nonce: rsyiHR.nonce,
+            employee_id: empId,
+            year: new Date().getFullYear()
+        }, function (res) {
+            $('#rsyi-hr-leave-balance-info').remove();
+            if (!res.success) return;
+            var b = res.data;
+            var typeLabels = {regular: 'اعتيادية', sick: 'مرضية', casual: 'عارضة', unpaid: 'بدون مرتب'};
+            var html = '<div id="rsyi-hr-leave-balance-info" style="background:#f0f6fc;border:1px solid #c5d9ed;border-radius:4px;padding:10px 14px;margin:8px 0;font-size:13px">' +
+                '<strong>رصيد الإجازات (' + new Date().getFullYear() + '):</strong> ';
+            var parts = [];
+            $.each(b, function(type, info) {
+                if (info.total > 0 || info.used > 0) {
+                    parts.push(typeLabels[type] + ': <span style="color:' + (info.remaining > 0 ? '#2e7d32' : '#c62828') + '">' + info.remaining + '</span>/' + info.total + ' يوم');
+                }
+            });
+            if (parts.length) {
+                html += parts.join(' &nbsp;|&nbsp; ');
+            } else {
+                html += '<span style="color:#888">لم يُحدَّد رصيد لهذا الموظف</span>';
+            }
+            html += '</div>';
+            $('#leave-employee').closest('.rsyi-hr-form-cols-2').after(html);
+        });
+    });
+
     // Calculate days between dates
     $(document).on('change', '#leave-from, #leave-to', function () {
         var f = $('#leave-from').val(), t = $('#leave-to').val();

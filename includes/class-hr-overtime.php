@@ -156,12 +156,23 @@ class Overtime {
                 if ( 'pending_manager' !== $row['status'] ) {
                     return false;
                 }
+                // إذا كان المدير المباشر هو نفسه مدير الموارد البشرية → اعتماد مباشر
+                $manager_is_hr = false;
+                if ( ! empty( $row['manager_id'] ) ) {
+                    $manager_emp = Employees::get_by_id( (int) $row['manager_id'] );
+                    if ( $manager_emp && ! empty( $manager_emp['user_id'] ) ) {
+                        $manager_is_hr = (bool) user_can( (int) $manager_emp['user_id'], 'rsyi_hr_manage_settings' );
+                    }
+                }
                 $update = [
                     'manager_signature' => sanitize_textarea_field( $signature ),
                     'manager_notes'     => sanitize_textarea_field( $notes ),
                     'manager_signed_at' => $now,
-                    'status'            => 'pending_hr',
+                    'status'            => $manager_is_hr ? 'approved' : 'pending_hr',
                 ];
+                if ( $manager_is_hr ) {
+                    $update['hr_manager_signed_at'] = $now;
+                }
                 break;
 
             case 'hr_manager':

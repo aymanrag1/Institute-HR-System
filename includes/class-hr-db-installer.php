@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 class DB_Installer {
 
-    const DB_VERSION        = '2.1.0';
+    const DB_VERSION        = '2.2.0';
     const DB_VERSION_OPTION = 'rsyi_hr_db_version';
 
     /**
@@ -229,7 +229,22 @@ class DB_Installer {
             KEY violation_date (violation_date)
         ) {$collate};" );
 
-        // ── 8. صلاحيات المستخدمين (لكل عنصر في النظام) ───────────────────────
+        // ── 8. رصيد الإجازات ──────────────────────────────────────────────────
+        $leave_balances = $wpdb->prefix . 'rsyi_hr_leave_balances';
+        dbDelta( "CREATE TABLE {$leave_balances} (
+            id          bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            employee_id bigint(20) UNSIGNED NOT NULL,
+            leave_type  enum('regular','sick','casual','unpaid') NOT NULL DEFAULT 'regular',
+            year        smallint(4) UNSIGNED NOT NULL,
+            total_days  int(11) NOT NULL DEFAULT 0,
+            updated_at  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY  (id),
+            UNIQUE KEY   emp_type_year (employee_id, leave_type, year),
+            KEY employee_id (employee_id),
+            KEY year (year)
+        ) {$collate};" );
+
+        // ── 9. صلاحيات المستخدمين (لكل عنصر في النظام) ───────────────────────
         $user_perms = $wpdb->prefix . 'rsyi_hr_user_permissions';
         dbDelta( "CREATE TABLE {$user_perms} (
             id         bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -269,6 +284,7 @@ class DB_Installer {
 
         $tables = [
             $wpdb->prefix . 'rsyi_hr_user_permissions',
+            $wpdb->prefix . 'rsyi_hr_leave_balances',
             $wpdb->prefix . 'rsyi_hr_violations',
             $wpdb->prefix . 'rsyi_hr_attendance',
             $wpdb->prefix . 'rsyi_hr_overtime',

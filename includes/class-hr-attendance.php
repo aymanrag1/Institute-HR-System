@@ -130,6 +130,12 @@ class Attendance {
             return $result;
         }
 
+        // Strip UTF-8 BOM (Excel/fingerprint machine exports)
+        $bom = fread( $handle, 3 ); // phpcs:ignore
+        if ( $bom !== "\xEF\xBB\xBF" ) {
+            rewind( $handle ); // phpcs:ignore
+        }
+
         $header = fgetcsv( $handle );
         if ( ! $header ) {
             fclose( $handle ); // phpcs:ignore
@@ -137,8 +143,10 @@ class Attendance {
             return $result;
         }
 
-        // normalize header
-        $header = array_map( 'trim', $header );
+        // normalize header (trim + remove any remaining BOM bytes)
+        $header = array_map( static function ( string $h ): string {
+            return trim( str_replace( "\xEF\xBB\xBF", '', $h ) );
+        }, $header );
         $row_num = 1;
 
         while ( ( $row = fgetcsv( $handle ) ) !== false ) {

@@ -21,7 +21,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-define( 'RSYI_HR_VERSION',     '2.1.0' );
+define( 'RSYI_HR_VERSION',     '2.2.0' );
 define( 'RSYI_HR_PLUGIN_FILE', __FILE__ );
 define( 'RSYI_HR_DIR',         plugin_dir_path( __FILE__ ) );
 define( 'RSYI_HR_URL',         plugin_dir_url( __FILE__ ) );
@@ -45,6 +45,7 @@ spl_autoload_register( static function ( string $class ): void {
         'Attendance'     => 'includes/class-hr-attendance.php',
         'Violations'     => 'includes/class-hr-violations.php',
         'Permissions_Mgr'=> 'includes/class-hr-permissions-mgr.php',
+        'Leave_Balance'  => 'includes/class-hr-leave-balance.php',
         'Portal'         => 'includes/class-hr-portal.php',
         'API'            => 'includes/class-hr-api.php',
         'Admin_Menu'     => 'admin/class-hr-admin.php',
@@ -90,6 +91,7 @@ function rsyi_hr_init(): void {
     RSYI_HR\Attendance::init();
     RSYI_HR\Violations::init();
     RSYI_HR\Permissions_Mgr::init();
+    RSYI_HR\Leave_Balance::init();
     RSYI_HR\Portal::init();
 
     // ── لوحة التحكم الإدارية ────────────────────────────────────────────

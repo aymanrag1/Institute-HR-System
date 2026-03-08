@@ -58,6 +58,12 @@ class Admin_Menu {
         );
 
         add_submenu_page( 'rsyi-hr',
+            __( 'رصيد الإجازات', 'rsyi-hr' ), __( 'رصيد الإجازات', 'rsyi-hr' ),
+            'rsyi_hr_manage_settings', 'rsyi-hr-leave-balance',
+            [ __CLASS__, 'page_leave_balance' ]
+        );
+
+        add_submenu_page( 'rsyi-hr',
             __( 'العمل الإضافي', 'rsyi-hr' ), __( 'العمل الإضافي', 'rsyi-hr' ),
             'rsyi_hr_manage_overtime', 'rsyi-hr-overtime',
             [ __CLASS__, 'page_overtime' ]
@@ -170,6 +176,11 @@ class Admin_Menu {
     public static function page_leaves(): void {
         $employees = Employees::get_all( [ 'status' => 'active' ] );
         include RSYI_HR_DIR . 'admin/views/leaves.php';
+    }
+
+    public static function page_leave_balance(): void {
+        $employees = Employees::get_all( [ 'status' => 'active' ] );
+        include RSYI_HR_DIR . 'admin/views/leave-balance.php';
     }
 
     public static function page_overtime(): void {

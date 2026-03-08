@@ -16,6 +16,22 @@ defined( 'ABSPATH' ) || exit;
 // يُستدعى من AJAX handler في class-hr-leaves.php
 // المتغيرات المتاحة: $leave (array)
 
+/**
+ * تنسيق التاريخ بالعربية: "يوم الأحد الموافق 8/3/2026"
+ */
+function rsyi_hr_format_date_ar( ?string $date ): string {
+    if ( empty( $date ) ) {
+        return '';
+    }
+    $ts = strtotime( $date );
+    if ( ! $ts ) {
+        return esc_html( $date );
+    }
+    $days_ar = [ 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت' ];
+    $day_name = $days_ar[ (int) date( 'w', $ts ) ];
+    return 'يوم ' . $day_name . ' الموافق ' . date( 'j/n/Y', $ts );
+}
+
 $leave_type_labels = [
     'regular' => 'اعتيادية',
     'sick'    => 'مرضى',
@@ -240,29 +256,25 @@ $selected_type = $leave['leave_type'] ?? 'regular';
     <!-- من يوم -->
     <div class="leave-field">
         <span class="leave-field-label">من يوم</span>
-        <span class="leave-field-value"><?php echo esc_html( $leave['from_date'] ?? '' ); ?></span>
-        <span class="leave-field-note">الموافق ..../..../......</span>
+        <span class="leave-field-value"><?php echo esc_html( rsyi_hr_format_date_ar( $leave['from_date'] ?? null ) ); ?></span>
     </div>
 
     <!-- حتى يوم -->
     <div class="leave-field">
         <span class="leave-field-label">حتى يوم</span>
-        <span class="leave-field-value"><?php echo esc_html( $leave['to_date'] ?? '' ); ?></span>
-        <span class="leave-field-note">الموافق ..../..../......</span>
+        <span class="leave-field-value"><?php echo esc_html( rsyi_hr_format_date_ar( $leave['to_date'] ?? null ) ); ?></span>
     </div>
 
     <!-- عودة إلى العمل -->
     <div class="leave-field">
         <span class="leave-field-label">عودة إلى العمل يوم</span>
-        <span class="leave-field-value"><?php echo esc_html( $leave['return_date'] ?? '' ); ?></span>
-        <span class="leave-field-note">الموافق ..../..../......</span>
+        <span class="leave-field-value"><?php echo esc_html( rsyi_hr_format_date_ar( $leave['return_date'] ?? null ) ); ?></span>
     </div>
 
     <!-- آخر يوم أجازة -->
     <div class="leave-field">
         <span class="leave-field-label">آخر يوم أجازة قمت بها:</span>
-        <span class="leave-field-value"><?php echo esc_html( $leave['last_leave_date'] ?? '' ); ?></span>
-        <span class="leave-field-note">..../..../......</span>
+        <span class="leave-field-value"><?php echo esc_html( rsyi_hr_format_date_ar( $leave['last_leave_date'] ?? null ) ); ?></span>
     </div>
 
     <!-- القائم بالعمل -->

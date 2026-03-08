@@ -27,6 +27,9 @@ class Leaves {
         add_action( 'wp_ajax_rsyi_hr_reject_leave',         [ __CLASS__, 'ajax_reject_leave' ] );
         add_action( 'wp_ajax_rsyi_hr_delete_leave',         [ __CLASS__, 'ajax_delete_leave' ] );
 
+        // Last leave date for auto-fill
+        add_action( 'wp_ajax_rsyi_hr_get_last_leave_date',  [ __CLASS__, 'ajax_get_last_leave_date' ] );
+
         // Print
         add_action( 'wp_ajax_rsyi_hr_print_leave',          [ __CLASS__, 'ajax_print_leave' ] );
 
@@ -295,6 +298,32 @@ class Leaves {
     public static function delete( int $id ): bool {
         global $wpdb;
         return (bool) $wpdb->delete( $wpdb->prefix . 'rsyi_hr_leaves', [ 'id' => $id ] );
+    }
+
+    /**
+     * آخر تاريخ إجازة معتمدة للموظف (to_date).
+     */
+    public static function get_last_approved_leave_date( int $employee_id ): ?string {
+        global $wpdb;
+        $tbl = $wpdb->prefix . 'rsyi_hr_leaves';
+        $val = $wpdb->get_var( $wpdb->prepare( // phpcs:ignore
+            "SELECT MAX(to_date) FROM {$tbl} WHERE employee_id = %d AND status = 'approved'",
+            $employee_id
+        ) );
+        return $val ?: null;
+    }
+
+    public static function ajax_get_last_leave_date(): void {
+        check_ajax_referer( 'rsyi_hr_admin', 'nonce' );
+        current_user_can( 'rsyi_hr_manage_leaves' ) || wp_die( -1 );
+
+        $employee_id = absint( $_POST['employee_id'] ?? 0 ); // phpcs:ignore
+        if ( ! $employee_id ) {
+            wp_send_json_error();
+        }
+
+        $date = self::get_last_approved_leave_date( $employee_id );
+        wp_send_json_success( [ 'last_leave_date' => $date ?: '' ] );
     }
 
     // ═══════════════════════════════════════════════════════════════════════
