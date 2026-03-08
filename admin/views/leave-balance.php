@@ -71,7 +71,7 @@ $current_year = (int) date( 'Y' );
                         <option value="<?php echo esc_attr( $e['id'] ); ?>">
                             <?php echo esc_html( ( $e['full_name_ar'] ?: $e['full_name'] ) . ' — ' . $e['employee_number'] ); ?>
                         </option>
-                    <?php endfor; ?>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="rsyi-hr-form-row">
