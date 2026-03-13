@@ -85,7 +85,7 @@
     /** Fill age + birth breakdown fields from DOB input */
     function updateDobFields(dobStr) {
         var age = calcAge(dobStr);
-        $('#emp-age-display').val(age !== '' ? age + ' ' + (i18n.years || 'yrs') : '');
+        $('#emp-age-display').val(age !== '' ? age + ' ' + (i18n.years || 'سنة') : '');
         if (dobStr) {
             var parts = dobStr.split('-');
             $('#emp-birth-year').val(parts[0] || '');
@@ -99,11 +99,11 @@
     /** Fill total years from hire date */
     function updateHireFields(hireDateStr) {
         var yrs = calcTotalYears(hireDateStr);
-        $('#emp-total-years').val(yrs !== '' ? yrs + ' ' + (i18n.years || 'yrs') : '');
+        $('#emp-total-years').val(yrs !== '' ? yrs + ' ' + (i18n.years || 'سنة') : '');
     }
 
     /** placeholder option مشترك */
-    var PLACEHOLDER_OPTION = '<option value="">\u2014 Select / \u0627\u062e\u062a\u0631 \u2014</option>';
+    var PLACEHOLDER_OPTION = '<option value="">\u2014 \u0627\u062e\u062a\u0631 \u2014</option>';
 
     /**
      * تعبئة قائمة الأقسام من البيانات المحقونة في الصفحة (بدون AJAX).
@@ -159,7 +159,7 @@
         var $tbody = $('#rsyi-hr-employees-body');
         if (!$tbody.length) return;
 
-        $tbody.html('<tr><td colspan="8" class="rsyi-hr-loading">' + (i18n.loading || 'Loading…') + '</td></tr>');
+        $tbody.html('<tr><td colspan="8" class="rsyi-hr-loading">' + (i18n.loading || 'جارٍ التحميل...') + '</td></tr>');
 
         ajax('rsyi_hr_get_employees', {
             status:        $('#rsyi-hr-filter-status').val() || 'all',
@@ -168,7 +168,7 @@
         }, function (err, rows) {
             if (err) { notice(err, 'error'); return; }
             if (!rows || !rows.length) {
-                $tbody.html('<tr><td colspan="8">' + (i18n.no_results || 'No results.') + '</td></tr>');
+                $tbody.html('<tr><td colspan="8">' + (i18n.no_results || 'لا توجد نتائج.') + '</td></tr>');
                 return;
             }
             var html = rows.map(function (r, idx) {
@@ -183,8 +183,8 @@
                     '<td>' + statusBadge(r.status) + '</td>' +
                     '<td>' + (r.phone || '—') + '</td>' +
                     '<td>' +
-                        '<button class="button button-small rsyi-hr-edit-emp" data-id="' + r.id + '">' + (i18n.edit || 'Edit') + '</button> ' +
-                        '<button class="button button-small rsyi-hr-delete-emp" data-id="' + r.id + '">' + (i18n.delete || 'Delete') + '</button>' +
+                        '<button class="button button-small rsyi-hr-edit-emp" data-id="' + r.id + '">' + (i18n.edit || 'تعديل') + '</button> ' +
+                        '<button class="button button-small rsyi-hr-delete-emp" data-id="' + r.id + '">' + (i18n.delete || 'حذف') + '</button>' +
                     '</td>' +
                 '</tr>';
             }).join('');
@@ -212,7 +212,7 @@
         $('#rsyi-hr-employee-form')[0].reset();
         $('#emp-id').val('');
         $('#emp-age-display, #emp-birth-year, #emp-birth-month, #emp-birth-day, #emp-total-years').val('');
-        $('#rsyi-hr-employee-modal-title').text(i18n.add_employee || 'Add Employee');
+        $('#rsyi-hr-employee-modal-title').text(i18n.add_employee || 'إضافة موظف');
         openModal('#rsyi-hr-employee-modal');
         // تحميل الأقسام والوظائف من DB مباشرة عند فتح الـ modal
         reloadDepartments();
@@ -260,7 +260,7 @@
             // Notes
             $('#emp-notes').val(emp.notes);
 
-            $('#rsyi-hr-employee-modal-title').text(i18n.edit_employee || 'Edit Employee');
+            $('#rsyi-hr-employee-modal-title').text(i18n.edit_employee || 'تعديل موظف');
             openModal('#rsyi-hr-employee-modal');
 
             // تحميل الأقسام من DB أولاً ثم تحديد القسم، ثم تحميل الوظائف وتحديدها
