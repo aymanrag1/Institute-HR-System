@@ -172,8 +172,15 @@
                 return;
             }
             var html = rows.map(function (r, idx) {
-                var nameDisplay = r.full_name || '';
-                if (r.full_name_ar) { nameDisplay += '<br><small style="color:#666">' + r.full_name_ar + '</small>'; }
+                var lang = getCurrentLang();
+                var nameDisplay;
+                if (lang === 'en') {
+                    nameDisplay = r.full_name || '';
+                    if (r.full_name_ar) { nameDisplay += '<br><small style="color:#666">' + r.full_name_ar + '</small>'; }
+                } else {
+                    nameDisplay = r.full_name_ar || r.full_name || '';
+                    if (r.full_name_ar && r.full_name) { nameDisplay = r.full_name_ar + '<br><small style="color:#666">' + r.full_name + '</small>'; }
+                }
                 return '<tr>' +
                     '<td>' + (idx + 1) + '</td>' +
                     '<td>' + (r.employee_number || '—') + '</td>' +
@@ -405,8 +412,36 @@
         });
     });
 
+    /* ══ LANGUAGE TOGGLE ════════════════════════════════════════════════════ */
+
+    var LANG_KEY = 'rsyi_hr_lang';
+
+    function getCurrentLang() {
+        return localStorage.getItem(LANG_KEY) || 'ar';
+    }
+
+    function applyLang(lang) {
+        var $btn = $('#rsyi-hr-lang-toggle');
+        if (lang === 'en') {
+            $btn.text('ع');
+            $('body').removeClass('rsyi-hr-lang-ar').addClass('rsyi-hr-lang-en');
+        } else {
+            $btn.text('E');
+            $('body').removeClass('rsyi-hr-lang-en').addClass('rsyi-hr-lang-ar');
+        }
+    }
+
+    $(document).on('click', '#rsyi-hr-lang-toggle', function () {
+        var current = getCurrentLang();
+        var next    = current === 'ar' ? 'en' : 'ar';
+        localStorage.setItem(LANG_KEY, next);
+        applyLang(next);
+        loadEmployees();
+    });
+
     /* ══ Init ════════════════════════════════════════════════════════════════ */
     $(function () {
+        applyLang(getCurrentLang());
         loadEmployees();
     });
 

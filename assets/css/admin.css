@@ -231,3 +231,32 @@
     padding-top: 16px;
     border-top: 1px solid #c3c4c7;
 }
+
+/* ── Language Toggle Button ─────────────────────────────────────────────── */
+#rsyi-hr-lang-toggle {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 99999;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #2271b1;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(0,0,0,.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s, transform .15s;
+    font-family: inherit;
+    line-height: 1;
+}
+
+#rsyi-hr-lang-toggle:hover {
+    background: #135e96;
+    transform: scale(1.08);
+}

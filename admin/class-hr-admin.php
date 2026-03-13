@@ -14,6 +14,15 @@ class Admin_Menu {
     public static function init(): void {
         add_action( 'admin_menu',            [ __CLASS__, 'register_menus' ] );
         add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_assets' ] );
+        add_action( 'admin_footer',          [ __CLASS__, 'render_lang_toggle' ] );
+    }
+
+    public static function render_lang_toggle(): void {
+        $screen = get_current_screen();
+        if ( ! $screen || false === strpos( $screen->id, 'rsyi-hr' ) ) {
+            return;
+        }
+        echo '<button id="rsyi-hr-lang-toggle" title="' . esc_attr__( 'تبديل اللغة', 'rsyi-hr' ) . '">ع</button>';
     }
 
     public static function register_menus(): void {
