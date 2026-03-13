@@ -2,118 +2,532 @@
 # Developer: AYMAN RAGAB | Mobile: +201159230034
 msgid ""
 msgstr ""
-"Project-Id-Version: RSYI HR System 2.1.0\n"
-"POT-Creation-Date: 2024-02-25T00:00:00+00:00\n"
-"PO-Revision-Date: 2024-02-25T00:00:00+00:00\n"
-"Last-Translator: AYMAN RAGAB\n"
-"Language-Team: Arabic\n"
-"Language: ar\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Domain: rsyi-hr\n"
+"Project-Id-Version: RSYI HR System 2.1.0
+"
+"POT-Creation-Date: 2026-03-13T15:40:08+00:00
+"
+"PO-Revision-Date: 2026-03-13T15:40:08+00:00
+"
+"Last-Translator: AYMAN RAGAB
+"
+"Language-Team: Arabic
+"
+"Language: ar
+"
+"MIME-Version: 1.0
+"
+"Content-Type: text/plain; charset=UTF-8
+"
+"Content-Transfer-Encoding: 8bit
+"
+"X-Domain: rsyi-hr
+"
+msgid "+ إضافة قسم"
+msgstr ""
 
-msgid "الموارد البشرية"
-msgstr "الموارد البشرية"
+msgid "+ إضافة موظف"
+msgstr ""
 
-msgid "لوحة التحكم"
-msgstr "لوحة التحكم"
+msgid "+ إضافة وظيفة"
+msgstr ""
 
-msgid "الموظفون"
-msgstr "الموظفون"
+msgid "آخر يوم أجازة قمت بها"
+msgstr ""
 
-msgid "الأقسام"
-msgstr "الأقسام"
+msgid "أتم الخدمة"
+msgstr ""
 
-msgid "التقسيم الوظيفي"
-msgstr "التقسيم الوظيفي"
+msgid "أخرى"
+msgstr ""
 
-msgid "طلبات الإجازة"
-msgstr "طلبات الإجازة"
+msgid "أرمل"
+msgstr ""
 
-msgid "العمل الإضافي"
-msgstr "العمل الإضافي"
+msgid "أعزب"
+msgstr ""
 
-msgid "الحضور والانصراف"
-msgstr "الحضور والانصراف"
-
-msgid "المخالفات والجزاءات"
-msgstr "المخالفات والجزاءات"
-
-msgid "الصلاحيات"
-msgstr "الصلاحيات"
-
-msgid "طلب إجازة"
-msgstr "طلب إجازة"
-
-msgid "اعتيادية"
-msgstr "اعتيادية"
-
-msgid "مرضية"
-msgstr "مرضية"
-
-msgid "عارضة"
-msgstr "عارضة"
-
-msgid "بدون مرتب"
-msgstr "بدون مرتب"
-
-msgid "حاضر"
-msgstr "حاضر"
-
-msgid "غائب"
-msgstr "غائب"
-
-msgid "متأخر"
-msgstr "متأخر"
-
-msgid "نصف يوم"
-msgstr "نصف يوم"
-
-msgid "إجازة رسمية"
-msgstr "إجازة رسمية"
+msgid "أيام"
+msgstr ""
 
 msgid "إجازة"
 msgstr "إجازة"
 
+msgid "إجازة رسمية"
+msgstr "إجازة رسمية"
+
+msgid "إجراءات"
+msgstr ""
+
+msgid "إجمالي الأيام"
+msgstr ""
+
+msgid "إجمالي الأيام المسموح بها *"
+msgstr ""
+
+msgid "إجمالي سنوات الخدمة"
+msgstr ""
+
+msgid "إضافة طلب"
+msgstr ""
+
+msgid "إضافة طلب إجازة"
+msgstr ""
+
+msgid "إضافة قسم"
+msgstr ""
+
+msgid "إضافة مخالفة"
+msgstr ""
+
+msgid "إضافة موظف"
+msgstr ""
+
+msgid "إضافة وظيفة"
+msgstr ""
+
+msgid "إعدادي"
+msgstr ""
+
+msgid "إغلاق"
+msgstr ""
+
+msgid "إلغاء"
+msgstr ""
+
+msgid "إلى"
+msgstr ""
+
+msgid "إلى الساعة *"
+msgstr ""
+
+msgid "إلى تاريخ"
+msgstr ""
+
+msgid "ابتدائي"
+msgstr ""
+
+msgid "اختر"
+msgstr ""
+
+msgid "اختر المستخدم لتحديد صلاحياته لكل عنصر في النظام."
+msgstr ""
+
+msgid "اختر مستخدماً"
+msgstr ""
+
+msgid "اختر موظفاً"
+msgstr ""
+
+msgid "ارفع ملف CSV لإضافة أو تحديث الأقسام دفعةً واحدة. إذا كان اسم القسم موجوداً سيُحدَّث، وإلا سيُضاف جديداً."
+msgstr ""
+
+msgid "ارفع ملف CSV لإضافة أو تحديث الموظفين دفعةً واحدة. إذا كان رقم الموظف موجوداً سيُحدَّث، وإلا سيُضاف جديداً."
+msgstr ""
+
+msgid "ارفع ملف CSV لإضافة أو تحديث الوظائف دفعةً واحدة. إذا كان المسمى الوظيفي موجوداً سيُحدَّث، وإلا سيُضاف جديداً."
+msgstr ""
+
+msgid "استخدم زر \"تحميل النموذج\" أعلاه للحصول على ملف CSV جاهز بالأعمدة الصحيحة."
+msgstr ""
+
+msgid "استخدم زر \"تحميل النموذج\" للحصول على ملف CSV جاهز بالأعمدة الصحيحة."
+msgstr ""
+
+msgid "استيراد"
+msgstr ""
+
+msgid "استيراد CSV"
+msgstr ""
+
+msgid "استيراد Excel"
+msgstr ""
+
+msgid "استيراد الأقسام من ملف CSV"
+msgstr ""
+
+msgid "استيراد الموظفين من ملف CSV"
+msgstr ""
+
+msgid "استيراد الوظائف من ملف CSV"
+msgstr ""
+
+msgid "استيراد ملف CSV للحضور"
+msgstr ""
+
+msgid "اسم البنك"
+msgstr ""
+
+msgid "اسم الزميل القائم بالعمل"
+msgstr ""
+
+msgid "اسم القائم بالعمل"
+msgstr ""
+
+msgid "اسم القسم"
+msgstr ""
+
+msgid "اسم القسم *"
+msgstr ""
+
+msgid "اسم القسم مطلوب."
+msgstr ""
+
+msgid "اسم الموظف مطلوب."
+msgstr ""
+
+msgid "اسم الوظيفة مطلوب."
+msgstr ""
+
+msgid "اعتماد"
+msgstr ""
+
+msgid "اعتماد وتصديق"
+msgstr ""
+
+msgid "اعتيادية"
+msgstr "اعتيادية"
+
+msgid "الأقسام"
+msgstr "الأقسام"
+
+msgid "الاسم"
+msgstr ""
+
+msgid "الاسم (إنجليزي) *"
+msgstr ""
+
+msgid "الاسم (عربي)"
+msgstr ""
+
+msgid "الاسم الكامل بالإنجليزية"
+msgstr ""
+
+msgid "الانصراف"
+msgstr ""
+
+msgid "البريد الإلكتروني"
+msgstr ""
+
 msgid "البند"
 msgstr "البند"
 
-msgid "بدون صلاحية"
-msgstr "بدون صلاحية"
+msgid "البيانات البنكية"
+msgstr ""
 
-msgid "عرض فقط"
-msgstr "عرض فقط"
+msgid "البيانات غير مكتملة."
+msgstr ""
 
-msgid "قراءة"
-msgstr "قراءة"
+msgid "البيانات ناقصة."
+msgstr ""
 
-msgid "قراءة وكتابة"
-msgstr "قراءة وكتابة"
+msgid "التاريخ"
+msgstr ""
 
-msgid "حفظ الصلاحيات"
-msgstr "حفظ الصلاحيات"
+msgid "التاريخ *"
+msgstr ""
 
-msgid "ضبط الصلاحيات"
-msgstr "ضبط الصلاحيات"
+msgid "التقسيم الوظيفي"
+msgstr "التقسيم الوظيفي"
 
 msgid "التوقيع الإلكتروني"
 msgstr "التوقيع الإلكتروني"
 
-msgid "رفع التوقيع"
-msgstr "رفع التوقيع"
+msgid "التوقيع الإلكتروني *"
+msgstr ""
 
-msgid "تم الحفظ بنجاح."
-msgstr "تم الحفظ بنجاح."
+msgid "التوقيع الإلكتروني للموظف *"
+msgstr ""
+
+msgid "الجزاء"
+msgstr ""
+
+msgid "الحالة"
+msgstr ""
+
+msgid "الحالة الاجتماعية"
+msgstr ""
+
+msgid "الحالة الحالية:"
+msgstr ""
+
+msgid "الحضور"
+msgstr ""
+
+msgid "الحضور والانصراف"
+msgstr "الحضور والانصراف"
+
+msgid "الدرجة"
+msgstr ""
+
+msgid "الدرجة الوظيفية"
+msgstr ""
+
+msgid "الديانة"
+msgstr ""
+
+msgid "الرجاء اختيار ملف CSV أولاً."
+msgstr ""
+
+msgid "الرقم التأميني"
+msgstr ""
+
+msgid "الرقم القومي"
+msgstr ""
+
+msgid "السبب / الملاحظات"
+msgstr ""
+
+msgid "السطر %d: خطأ في الحفظ."
+msgstr ""
+
+msgid "السطر %d: رقم الموظف \"%s\" غير موجود."
+msgstr ""
+
+msgid "السطر %d: عدد الأعمدة غير متطابق."
+msgstr ""
+
+msgid "السكن"
+msgstr ""
+
+msgid "السن"
+msgstr ""
+
+msgid "السنة"
+msgstr ""
+
+msgid "السنة *"
+msgstr ""
+
+msgid "السنة:"
+msgstr ""
+
+msgid "الشهر"
+msgstr ""
+
+msgid "الصلاحيات"
+msgstr "الصلاحيات"
+
+msgid "الصلاحيات التلقائية المرتبطة بكل دور وظيفي في المعهد."
+msgstr ""
+
+msgid "الصلاحية"
+msgstr ""
+
+msgid "الطلب غير موجود."
+msgstr ""
+
+msgid "العمل الإضافي"
+msgstr "العمل الإضافي"
+
+msgid "القائم بالعمل أثناء الإجازة"
+msgstr ""
+
+msgid "القسم"
+msgstr ""
+
+msgid "القسم (اختياري)"
+msgstr ""
+
+msgid "القسم الأعلى"
+msgstr ""
+
+msgid "القسم الأعلى (اختياري)"
+msgstr ""
+
+msgid "الكود"
+msgstr ""
+
+msgid "المؤهل الدراسي"
+msgstr ""
+
+msgid "المتبقي"
+msgstr ""
+
+msgid "المخالفات والجزاءات"
+msgstr "المخالفات والجزاءات"
+
+msgid "المخالفة"
+msgstr ""
+
+msgid "المدير المسؤول"
+msgstr ""
+
+msgid "المستخدم"
+msgstr ""
+
+msgid "المسمى الوظيفي"
+msgstr ""
+
+msgid "المسمى الوظيفي *"
+msgstr ""
+
+msgid "المعلومات الشخصية"
+msgstr ""
+
+msgid "الملف فارغ أو تالف."
+msgstr ""
+
+msgid "الموارد البشرية"
+msgstr "الموارد البشرية"
+
+msgid "الموافق"
+msgstr ""
+
+msgid "الموظف"
+msgstr ""
+
+msgid "الموظف *"
+msgstr ""
+
+msgid "الموظف غير موجود."
+msgstr ""
+
+msgid "الموظفون"
+msgstr "الموظفون"
+
+msgid "النوع"
+msgstr ""
+
+msgid "الهاتف"
+msgstr ""
+
+msgid "الوصف"
+msgstr ""
+
+msgid "الوظيفة"
+msgstr ""
+
+msgid "اليوم"
+msgstr ""
+
+msgid "بحث بالاسم أو الرقم أو الرقم القومي..."
+msgstr ""
+
+msgid "بداية العقد"
+msgstr ""
+
+msgid "بدون صلاحية"
+msgstr "بدون صلاحية"
+
+msgid "بدون مرتب"
+msgstr "بدون مرتب"
+
+msgid "بكالوريوس"
+msgstr ""
+
+msgid "بيانات العمل"
+msgstr ""
+
+msgid "بيانات الموظف"
+msgstr ""
+
+msgid "بيانات الهوية"
+msgstr ""
+
+msgid "بيانات غير صحيحة."
+msgstr ""
+
+msgid "تاريخ الإجازة مطلوب."
+msgstr ""
+
+msgid "تاريخ التعيين"
+msgstr ""
+
+msgid "تاريخ العمل"
+msgstr ""
+
+msgid "تاريخ العمل *"
+msgstr ""
+
+msgid "تاريخ العمل الإضافي *"
+msgstr ""
+
+msgid "تاريخ المخالفة *"
+msgstr ""
+
+msgid "تاريخ الميلاد"
+msgstr ""
+
+msgid "تبديل اللغة"
+msgstr ""
+
+msgid "تحذير: إذا فعّلت هذا الخيار وقمت بحذف البلجن من WordPress — ستُحذف كل بيانات الموارد البشرية نهائياً. اتركه مُعطَّلاً للحفاظ على بياناتك."
+msgstr ""
+
+msgid "تحميل الصلاحيات"
+msgstr ""
+
+msgid "تحميل النموذج"
+msgstr ""
+
+msgid "تسجيل حضور"
+msgstr ""
+
+msgid "تسجيل حضور / انصراف"
+msgstr ""
+
+msgid "تسجيل مخالفة وجزاء"
+msgstr ""
+
+msgid "تصديق العميد"
+msgstr ""
+
+msgid "تعديل"
+msgstr ""
+
+msgid "تعديل موظف"
+msgstr ""
+
+msgid "تعذّر الاعتماد."
+msgstr ""
+
+msgid "تعذّر الحذف."
+msgstr ""
+
+msgid "تعذّر فتح الملف."
+msgstr ""
+
+msgid "تعيين رصيد إجازة"
+msgstr ""
+
+msgid "تعيين رصيد موظف"
+msgstr ""
+
+msgid "تفاصيل الإجازة"
+msgstr ""
+
+msgid "تفاصيل المخالفة"
+msgstr ""
+
+msgid "تفاصيل طلب الإجازة"
+msgstr ""
+
+msgid "تم إعادة ضبط الصلاحيات."
+msgstr "تم إعادة ضبط الصلاحيات."
+
+msgid "تم الاستيراد بنجاح."
+msgstr ""
 
 msgid "تم الاعتماد بنجاح."
 msgstr "تم الاعتماد بنجاح."
 
-msgid "حدث خطأ، حاول مجدداً."
-msgstr "حدث خطأ، حاول مجدداً."
+msgid "تم الحفظ بنجاح."
+msgstr "تم الحفظ بنجاح."
 
-msgid "جارٍ التحميل..."
-msgstr "جارٍ التحميل..."
+msgid "تم الرفض."
+msgstr ""
+
+msgid "تم حفظ الإعداد."
+msgstr ""
+
+msgid "تم حفظ الصلاحيات بنجاح."
+msgstr "تم حفظ الصلاحيات بنجاح."
+
+msgid "تم حفظ الصلاحيات."
+msgstr ""
+
+msgid "تم رفع التوقيع بنجاح."
+msgstr "تم رفع التوقيع بنجاح."
 
 msgid "تم رفع طلب الإجازة بنجاح."
 msgstr "تم رفع طلب الإجازة بنجاح."
@@ -121,14 +535,444 @@ msgstr "تم رفع طلب الإجازة بنجاح."
 msgid "تم رفع طلب العمل الإضافي بنجاح."
 msgstr "تم رفع طلب العمل الإضافي بنجاح."
 
-msgid "تم رفع التوقيع بنجاح."
-msgstr "تم رفع التوقيع بنجاح."
+msgid "تمت العملية: %1$d سجل جديد، %2$d سجل محدَّث."
+msgstr ""
 
-msgid "تم حفظ الصلاحيات بنجاح."
-msgstr "تم حفظ الصلاحيات بنجاح."
+msgid "تنزيل نموذج Excel"
+msgstr ""
 
-msgid "تم إعادة ضبط الصلاحيات."
-msgstr "تم إعادة ضبط الصلاحيات."
+msgid "توسعات خارجية"
+msgstr ""
+
+msgid "توقيعك الإلكتروني"
+msgstr ""
+
+msgid "ثانوي"
+msgstr ""
+
+msgid "جارٍ التحميل..."
+msgstr "جارٍ التحميل..."
+
+msgid "جزء وقت"
+msgstr ""
+
+msgid "حاضر"
+msgstr "حاضر"
+
+msgid "حتى يوم *"
+msgstr ""
+
+msgid "حدث خطأ أثناء الرفع، حاول مجدداً."
+msgstr ""
+
+msgid "حدث خطأ، حاول مجدداً."
+msgstr "حدث خطأ، حاول مجدداً."
+
+msgid "حذف"
+msgstr ""
+
+msgid "حذف كل البيانات عند إزالة البلجن"
+msgstr ""
+
+msgid "حسابك غير مرتبط بسجل موظف. تواصل مع مدير الموارد البشرية."
+msgstr ""
+
+msgid "حفظ"
+msgstr ""
+
+msgid "حفظ الصلاحيات"
+msgstr "حفظ الصلاحيات"
+
+msgid "حفظ الطلب"
+msgstr ""
+
+msgid "حفظ مسودة"
+msgstr ""
+
+msgid "حماية البيانات عند حذف البلجن"
+msgstr ""
+
+msgid "دائم"
+msgstr ""
+
+msgid "دبلوم"
+msgstr ""
+
+msgid "دكتوراه"
+msgstr ""
+
+msgid "رصيد الإجازات"
+msgstr ""
+
+msgid "رفض"
+msgstr ""
+
+msgid "رفع التوقيع"
+msgstr "رفع التوقيع"
+
+msgid "رفع صورة التوقيع (PNG/JPG)"
+msgstr ""
+
+msgid "رفع طلب الإجازة"
+msgstr ""
+
+msgid "رفع طلب العمل الإضافي"
+msgstr ""
+
+msgid "رفع لاعتماد العميد"
+msgstr ""
+
+msgid "رفع واستيراد"
+msgstr ""
+
+msgid "رقم الحساب البنكي"
+msgstr ""
+
+msgid "رقم الموظف"
+msgstr ""
+
+msgid "روابط سريعة"
+msgstr ""
+
+msgid "ساعات"
+msgstr ""
+
+msgid "سبب الطلب"
+msgstr ""
+
+msgid "سبب العمل الإضافي *"
+msgstr ""
+
+msgid "سنة"
+msgstr ""
+
+msgid "سنة الميلاد"
+msgstr ""
+
+msgid "سيُستخدم توقيعك الإلكتروني المحفوظ في الطلب."
+msgstr ""
+
+msgid "صف %d: اسم القسم مطلوب — تم تخطيه."
+msgstr ""
+
+msgid "صف %d: المسمى الوظيفي مطلوب — تم تخطيه."
+msgstr ""
+
+msgid "صف %d: حقل الاسم (EN) مطلوب — تم تخطيه."
+msgstr ""
+
+msgid "صلاحيات الأدوار الوظيفية"
+msgstr ""
+
+msgid "صيغة الملف غير مدعومة. (PNG/JPG فقط)"
+msgstr ""
+
+msgid "ضبط الصلاحيات"
+msgstr "ضبط الصلاحيات"
+
+msgid "طباعة"
+msgstr ""
+
+msgid "طلب إجازة"
+msgstr "طلب إجازة"
+
+msgid "طلب إجازة جديد"
+msgstr ""
+
+msgid "طلب عمل إضافي"
+msgstr ""
+
+msgid "طلبات الإجازة"
+msgstr "طلبات الإجازة"
+
+msgid "طلبات العمل الإضافي"
+msgstr ""
+
+msgid "عارضة"
+msgstr "عارضة"
+
+msgid "عدد الأيام"
+msgstr ""
+
+msgid "عدد الساعات (محسوب)"
+msgstr ""
+
+msgid "عرض فقط"
+msgstr "عرض فقط"
+
+msgid "عودة إلى العمل يوم"
+msgstr ""
+
+msgid "عودة للعمل يوم"
+msgstr ""
+
+msgid "غائب"
+msgstr "غائب"
+
+msgid "غير مصرح."
+msgstr ""
+
+msgid "غير نشط"
+msgstr ""
+
+msgid "في إجازة"
+msgstr ""
+
+msgid "قراءة"
+msgstr "قراءة"
+
+msgid "قراءة وكتابة"
+msgstr "قراءة وكتابة"
+
+msgid "قسم"
+msgstr ""
+
+msgid "قم بتنزيل النموذج أولاً، ثم رفع الملف المكتمل."
+msgstr ""
+
+msgid "قيمة الجزاء"
+msgstr ""
+
+msgid "كل الأقسام"
+msgstr ""
+
+msgid "كل الحالات"
+msgstr ""
+
+msgid "لا توجد plugins خارجية مسجَّلة. استخدم RSYI_HR\\Roles::register_extension_caps() لتسجيل صلاحيات plugin خارجية."
+msgstr ""
+
+msgid "لا توجد أقسام بعد."
+msgstr ""
+
+msgid "لا توجد نتائج."
+msgstr ""
+
+msgid "لا توجد وظائف بعد."
+msgstr ""
+
+msgid "لا يمكن حذف القسم لوجود موظفين مرتبطين به."
+msgstr ""
+
+msgid "لا يمكن حذف الوظيفة لوجود موظفين مرتبطين بها."
+msgstr ""
+
+msgid "لا ينطبق"
+msgstr ""
+
+msgid "لم يؤدِ"
+msgstr ""
+
+msgid "لم يتم ربط حسابك بسجل موظف."
+msgstr ""
+
+msgid "لم يتم ربط حسابك بسجل موظف. تواصل مع مدير الموارد البشرية."
+msgstr ""
+
+msgid "لم يتم رفع أي ملف."
+msgstr ""
+
+msgid "لم يتم رفع الملف."
+msgstr ""
+
+msgid "لم يتم رفع توقيعك الإلكتروني بعد."
+msgstr ""
+
+msgid "لم يتم رفع توقيعك الإلكتروني. يرجى الرسم هنا أو رفع صورة التوقيع من لوحة التحكم."
+msgstr ""
+
+msgid "لوحة التحكم"
+msgstr "لوحة التحكم"
+
+msgid "لوحة تحكم الموارد البشرية"
+msgstr ""
+
+msgid "مؤقت"
+msgstr ""
+
+msgid "ماجستير"
+msgstr ""
+
+msgid "متأخر"
+msgstr "متأخر"
+
+msgid "متزوج"
+msgstr ""
+
+msgid "مثال: EMP-001"
+msgstr ""
+
+msgid "مثال: أ، ب، 1، 2..."
+msgstr ""
+
+msgid "مثال: الدرجة 5"
+msgstr ""
+
+msgid "مثال: يوم واحد"
+msgstr ""
+
+msgid "مرضى"
+msgstr ""
+
+msgid "مرضية"
+msgstr "مرضية"
+
+msgid "مسح"
+msgstr ""
+
+msgid "مسح التوقيع"
+msgstr ""
+
+msgid "مسلم"
+msgstr ""
+
+msgid "مسيحي"
+msgstr ""
+
+msgid "مشروع"
+msgstr ""
+
+msgid "مصفوفة الصلاحيات"
+msgstr ""
+
+msgid "مطلق"
+msgstr ""
+
+msgid "معفى"
+msgstr ""
+
+msgid "ملاحظات"
+msgstr ""
+
+msgid "ملاحظات العميد"
+msgstr ""
+
+msgid "ملاحظات مدير HR"
+msgstr ""
+
+msgid "من"
+msgstr ""
+
+msgid "من الساعة *"
+msgstr ""
+
+msgid "من تاريخ"
+msgstr ""
+
+msgid "من يوم *"
+msgstr ""
+
+msgid "موظف نشط"
+msgstr ""
+
+msgid "موقف التجنيد"
+msgstr ""
+
+msgid "نشط"
+msgstr ""
+
+msgid "نصف يوم"
+msgstr "نصف يوم"
+
+msgid "نموذج طلب العمل الإضافي"
+msgstr ""
+
+msgid "نهاية العقد"
+msgstr ""
+
+msgid "نوع الإجازة"
+msgstr ""
+
+msgid "نوع الإجازة *"
+msgstr ""
+
+msgid "نوع الجزاء"
+msgstr ""
+
+msgid "نوع الحضور *"
+msgstr ""
+
+msgid "نوع السكن أو العنوان"
+msgstr ""
+
+msgid "نوع العقد"
+msgstr ""
+
+msgid "نوع المخالفة *"
+msgstr ""
+
+msgid "نوع الملف غير مدعوم. استخدم ملف CSV."
+msgstr ""
+
+msgid "هذا الحقل مطلوب."
+msgstr ""
+
+msgid "هل أنت متأكد من الحذف؟"
+msgstr ""
+
+msgid "هل تريد الاعتماد؟"
+msgstr ""
+
+msgid "هل تريد رفع الطلب؟ لن يمكن تعديله بعد ذلك."
+msgstr ""
+
+msgid "هل تريد مسح التوقيع؟"
+msgstr ""
+
+msgid "وقت الانصراف"
+msgstr ""
+
+msgid "وقت الحضور"
+msgstr ""
+
+msgid "يجب اختيار مستخدم."
+msgstr ""
 
 msgid "يجب تسجيل الدخول للوصول إلى بوابة الموظف."
 msgstr "يجب تسجيل الدخول للوصول إلى بوابة الموظف."
+
+msgid "يجب تسجيل الدخول."
+msgstr ""
+
+msgid "يجب وضع التوقيع الإلكتروني قبل الإرسال."
+msgstr ""
+
+msgid "يمكنك تحديث توقيعك الإلكتروني بتحميل صورة جديدة."
+msgstr ""
+
+msgid "يوم"
+msgstr ""
+
+msgid "يُحسب تلقائياً"
+msgstr ""
+
+msgid "يُقبَل فقط ملفات CSV."
+msgstr ""
+
+msgid "— اختر موظفاً —"
+msgstr ""
+
+msgid "— اختر —"
+msgstr ""
+
+msgid "— عام لكل الأقسام —"
+msgstr ""
+
+msgid "— كل الأنواع —"
+msgstr ""
+
+msgid "— كل الحالات —"
+msgstr ""
+
+msgid "— كل الموظفين —"
+msgstr ""
+
+msgid "— لا يوجد —"
+msgstr ""
+
+msgid "⚠ الحذف مفعَّل — بياناتك في خطر عند الإزالة"
+msgstr ""
+
+msgid "✓ البيانات محمية — لن تُحذف عند إزالة البلجن"
+msgstr ""
+
